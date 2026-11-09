@@ -33,7 +33,15 @@ export const matchupFile = z.object({
 export const catalogFile = z.object({
   currentPatch: z.string(),
   refreshedAt: z.string(),
-  champions: z.array(z.object({ id: z.string(), name: z.string() })),
+  champions: z.array(
+    z.object({
+      id: z.string(),
+      name: z.string(),
+      icon: z.string().optional(),
+      splash: z.string().optional(),
+      skin: z.string().optional(),
+    }),
+  ),
 });
 
 export const focusChampionsFile = z.object({

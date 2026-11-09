@@ -4,28 +4,21 @@ import { loadKnowledgeBase } from "@/content";
 const baseline = "tests/content/fixtures/baseline";
 
 describe("Matchup view", () => {
-  it("shows a Mid Matchup's Sections in template order with credited Insights", () => {
+  it("groups a Mid Matchup's Sections in template order, with credited Insights", () => {
     const { kb } = loadKnowledgeBase(baseline);
 
     const view = kb.matchup("mid/orianna--syndra", "orianna");
 
-    expect(view.sections.map((s) => s.id)).toEqual([
-      "overview",
-      "win-conditions",
-      "power-spikes",
-      "phase-advantage",
-      "trading",
-      "tethering",
-      "cooldown-windows",
-      "all-in-windows",
-      "defensive-windows",
-      "wave-and-priority",
-      "runes-and-spells",
-      "itemization",
-      "roaming",
-      "statistics",
+    expect(view.groups.map((g) => [g.id, g.sections.map((s) => s.id)])).toEqual([
+      ["overview", ["overview", "difficulty", "win-conditions"]],
+      ["timeline", ["power-spikes", "early-game", "mid-game", "late-game"]],
+      ["trading", ["trading-patterns", "trading-stance", "cooldown-windows"]],
+      ["windows", ["all-in-windows", "kill-windows", "defensive-windows"]],
+      ["build", ["runes", "summoner-spells", "itemization"]],
+      ["general-concepts", ["tethering", "wave-management", "lane-priority", "roaming", "map-pressure"]],
+      ["statistics", ["statistics"]],
     ]);
-    const trading = view.sections.find((s) => s.id === "trading");
+    const trading = view.groups.flatMap((g) => g.sections).find((s) => s.id === "trading-patterns");
     expect(trading?.insights).toEqual([
       expect.objectContaining({
         id: "mid-orianna-syndra-0001",
@@ -38,4 +31,15 @@ describe("Matchup view", () => {
       }),
     ]);
   });
+});
+
+it("gives a Bot Matchup Support influence instead of Roaming and Map pressure", () => {
+  const { kb } = loadKnowledgeBase(baseline);
+
+  const ids = kb.matchup("bot/ezreal--kaisa", "ezreal").groups.flatMap((g) => g.sections.map((s) => s.id));
+
+  expect(ids).toContain("support-influence");
+  expect(ids).not.toContain("roaming");
+  expect(ids).not.toContain("map-pressure");
+  expect(ids).toHaveLength(21);
 });

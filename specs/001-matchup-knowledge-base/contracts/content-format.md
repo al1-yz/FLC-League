@@ -12,9 +12,11 @@ contract links to it rather than being maintained in parallel.
 <LOLMECHS_CONTENT_DIR>/
 ├── catalog/                     # written ONLY by `npm run catalog:refresh`
 │   ├── catalog.json
-│   └── icons/<championId>.png
+│   ├── icons/<championId>.png
+│   └── splash/<championId>.jpg   # Focus Champions only
 ├── config/                      # written by the user or Claude
 │   ├── focus-champions.yaml
+│   ├── skins.yaml               # splash-art skin per Focus Champion (exact Data Dragon name)
 │   ├── archetypes.yaml
 │   └── section-concepts.yaml
 ├── sources/<sourceId>.yaml
@@ -39,7 +41,7 @@ lane: mid
 champions: [orianna, syndra]
 insights:
   - id: mid-orianna-syndra-0001
-    section: trading
+    section: trading-patterns
     about: syndra
     claim: >-
       Syndra wins short trades when her E (Scatter the Weak) is up: she can stun Orianna as
@@ -86,7 +88,7 @@ conflicts:
 - **archetype-matchups/...yaml**: `lane`, `archetypes: [a, b]`, `insights[]` (`patch` required).
 - **config/focus-champions.yaml**: `mid: [akali, orianna, zed]`, `bot: [ezreal, kaisa, yunara]`.
 - **config/archetypes.yaml**: list of `{id, name}`.
-- **config/section-concepts.yaml**: `wave-and-priority: [wave-management, lane-priority]`, and so on.
+- **config/section-concepts.yaml**: `wave-management: [wave-management]`, `lane-priority: [lane-priority]`, `tethering: [trading]`, and so on.
 
 ## Validation rules applied on load
 
@@ -97,7 +99,7 @@ conflicts:
 | R-QUOTE | `quote` ≤ 200 chars, one sentence | I3 |
 | R-FOCUS | at least one champion is a Focus Champion of `lane` | I4 |
 | R-PAIR | champions differ; file name matches sorted pair; no duplicate Matchup | I5 |
-| R-SECTION | section valid for the lane (`roaming` only mid, `support-influence` only bot) | I6 |
+| R-SECTION | section valid for the lane (`roaming` and `map-pressure` only mid, `support-influence` only bot) | I6 |
 | R-RANK | `rankFilter` is Emerald or higher | I7 |
 | R-ABOUT | `about` is one of the two champions or `both` | I15 |
 | R-ARCH | archetypes exist in the list; secondary ≠ primary | I16 |

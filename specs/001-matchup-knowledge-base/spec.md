@@ -31,7 +31,7 @@ Before or during champion select, the user opens the Matchup they are about to p
 
 **Acceptance Scenarios**:
 
-1. **Given** Orianna vs Syndra (Mid) has Insights, **When** the user opens it from Orianna, **Then** the page shows the 14 Mid sections in the fixed order (all template sections except "Support influence"), from Orianna's perspective.
+1. **Given** Orianna vs Syndra (Mid) has Insights, **When** the user opens it from Orianna, **Then** the page shows the 22 Mid Sections in their groups and fixed order (all template Sections except "Support influence"), from Orianna's perspective.
 2. **Given** an Insight from a video Source, **When** it is displayed, **Then** it shows the Source name, a link that opens the video at the stored timestamp, its Patch, and the date it was noted.
 3. **Given** a section with no Insights, **When** the page is shown, **Then** that section is still displayed with a visible "no Source covers this yet" gap marker.
 4. **Given** two Insights marked as a Conflict, **When** their section is shown, **Then** both appear next to each other, labeled as conflicting, each with its own credit, and neither is visually ranked above the other.
@@ -221,7 +221,8 @@ In a Matchup's Statistics section, the user sees hand-recorded Third-party Refer
 **Matchups**
 
 - **FR-014**: A Matchup MUST be identified by its two champions and Lane, regardless of order, and at least one champion MUST be a Focus Champion of that Lane (I4, I5).
-- **FR-015**: Every Matchup page MUST show the fixed template in this order: Overview & difficulty; Win conditions (both sides); Power spikes; Early, mid and late game advantage; Trading patterns & stance; Tethering; Cooldown windows; All-in & kill windows; Defensive windows; Wave management & lane priority; Runes & summoner spells; Itemization; Roaming & map pressure (Mid only); Support influence (Bot only); Statistics (I6).
+- **FR-015**: Every Matchup page MUST show the fixed template of single-topic Sections (no compound Sections, D13.1), in groups and in this order: **Overview** (Overview; Difficulty; Win conditions; Support influence, Bot only), **Game timeline** (Power spikes; Early game; Mid game; Late game), **Trading** (Trading patterns; Trading stance; Cooldown windows), **Windows** (All-in windows; Kill windows; Defensive windows), **Build** (Runes; Summoner spells; Itemization), **General Concepts** (Tethering; Wave management; Lane priority; Roaming, Mid only; Map pressure, Mid only), **Statistics**. Mid has 22 Sections, Bot 21 (I6).
+- **FR-015a**: The Matchup page MUST use the Focus Champion's splash art (skin chosen per champion in the Content Repository's configuration, from the Catalog) as its background when available, and show the two champions as panels around a central matchup element, with the Game timeline above the detailed groups (D13.2).
 - **FR-016**: The Power spikes section MUST organize Insights by level (1–18) and by item, not as one undivided list.
 - **FR-017**: A Matchup page MUST be shown from the perspective of the Focus Champion it was opened from. When both champions are Focus Champions, the user MUST be able to switch perspective.
 - **FR-018**: Each section with no Insights MUST show a gap marker.
@@ -288,7 +289,7 @@ In a Matchup's Statistics section, the user sees hand-recorded Third-party Refer
 
 ### Measurable Outcomes
 
-- **SC-001**: The Orianna vs Syndra Matchup is fully filled: all 14 Mid sections contain at least one credited Insight or Me note, and at least one Conflict is shown side by side.
+- **SC-001**: The Orianna vs Syndra Matchup is fully filled: all 22 Mid Sections contain at least one credited Insight or Me note, and at least one Conflict is shown side by side.
 - **SC-002**: At least 3 General Concept pages (including Wave Management and Lane Priority) have credited Insights and working "Applied in" links from Orianna vs Syndra.
 - **SC-003**: From app launch, the user reaches any existing Matchup in at most 3 clicks.
 - **SC-004**: Recording or updating a Verdict after a game takes under 30 seconds.

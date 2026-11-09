@@ -108,3 +108,9 @@ Each grilling round's outcomes. **D** = decided, **O** = open, **H** = hypothesi
 ## Art direction — 2026-11-09
 
 - **D12.1** Art direction changed to **"Antique Gold & Deep Violet"** (#B9A38B / #2C1F33; `docs/design/palette-antique-gold-deep-violet.png`). It supersedes the teal accent from D1.14; the original reference image is kept for layout only. Luxurious and elegant: Fraunces display serif + Jost text (self-hosted), animated ambient patterns (drifting glow, art-deco fan pattern, gold title glint, drawn ornaments, staggered reveals), with data shown high-contrast and static. Motion respects `prefers-reduced-motion`.
+
+## Matchup redesign — 2026-11-09
+
+- **D13.1** No compound Sections: every "&" Section is split (e.g. Wave management / Lane priority, Runes / Summoner spells, All-in windows / Kill windows, Early / Mid / Late game, Overview / Difficulty, Trading patterns / Trading stance, Roaming / Map pressure). Sections are grouped: Overview, Game timeline, Trading, Windows, Build, **General Concepts** (Tethering, Wave management, Lane priority, Roaming, Map pressure: shown inside the Matchup and also as standalone General Concept pages), Statistics. Mid has 22 Sections, Bot 21. Supersedes the 15-section list of D3.6.
+- **D13.2** Dashboard-style Matchup page (user reference image): the Focus Champion's **skin splash art** as full-page background (skin chosen per champion in `config/skins.yaml`, e.g. Dark Star Orianna; downloaded from Data Dragon by the catalog refresh into the private Content Repository), two champion panels joined by animated flow lines to a central orb, and a particle-wave Game timeline above the grouped details. The gold/violet palette (D12.1) is kept.
+- **D13.3** Ticket 02 (catalog refresh) was done early, because the splash backgrounds depend on it. `.env.local` points the app at the private content repo.

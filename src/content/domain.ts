@@ -3,24 +3,45 @@ export type ChampionId = string;
 /** `<lane>/<a>--<b>` with a < b alphabetically, so both orders give the same key. */
 export type MatchupKey = string;
 
-/** The fixed Matchup template, in display order. */
-export const SECTIONS = [
-  { id: "overview", title: "Overview & difficulty" },
-  { id: "win-conditions", title: "Win conditions" },
-  { id: "power-spikes", title: "Power spikes" },
-  { id: "phase-advantage", title: "Early, mid & late game" },
-  { id: "trading", title: "Trading patterns & stance" },
-  { id: "tethering", title: "Tethering" },
-  { id: "cooldown-windows", title: "Cooldown windows" },
-  { id: "all-in-windows", title: "All-in & kill windows" },
-  { id: "defensive-windows", title: "Defensive windows" },
-  { id: "wave-and-priority", title: "Wave management & lane priority" },
-  { id: "runes-and-spells", title: "Runes & summoner spells" },
-  { id: "itemization", title: "Itemization" },
-  { id: "roaming", title: "Roaming & map pressure", lane: "mid" },
-  { id: "support-influence", title: "Support influence", lane: "bot" },
+/** Groups of Sections on a Matchup page, in display order (D13.1). */
+export const SECTION_GROUPS = [
+  { id: "overview", title: "Overview" },
+  { id: "timeline", title: "Game timeline" },
+  { id: "trading", title: "Trading" },
+  { id: "windows", title: "Windows" },
+  { id: "build", title: "Build" },
+  { id: "general-concepts", title: "General Concepts" },
   { id: "statistics", title: "Statistics" },
-] as const satisfies readonly { id: string; title: string; lane?: Lane }[];
+] as const;
+
+export type SectionGroupId = (typeof SECTION_GROUPS)[number]["id"];
+
+/** The fixed Matchup template, in display order. One topic per Section, no compound Sections (D13.1). */
+export const SECTIONS = [
+  { id: "overview", title: "Overview", group: "overview" },
+  { id: "difficulty", title: "Difficulty", group: "overview" },
+  { id: "win-conditions", title: "Win conditions", group: "overview" },
+  { id: "support-influence", title: "Support influence", group: "overview", lane: "bot" },
+  { id: "power-spikes", title: "Power spikes", group: "timeline" },
+  { id: "early-game", title: "Early game", group: "timeline" },
+  { id: "mid-game", title: "Mid game", group: "timeline" },
+  { id: "late-game", title: "Late game", group: "timeline" },
+  { id: "trading-patterns", title: "Trading patterns", group: "trading" },
+  { id: "trading-stance", title: "Trading stance", group: "trading" },
+  { id: "cooldown-windows", title: "Cooldown windows", group: "trading" },
+  { id: "all-in-windows", title: "All-in windows", group: "windows" },
+  { id: "kill-windows", title: "Kill windows", group: "windows" },
+  { id: "defensive-windows", title: "Defensive windows", group: "windows" },
+  { id: "runes", title: "Runes", group: "build" },
+  { id: "summoner-spells", title: "Summoner spells", group: "build" },
+  { id: "itemization", title: "Itemization", group: "build" },
+  { id: "tethering", title: "Tethering", group: "general-concepts" },
+  { id: "wave-management", title: "Wave management", group: "general-concepts" },
+  { id: "lane-priority", title: "Lane priority", group: "general-concepts" },
+  { id: "roaming", title: "Roaming", group: "general-concepts", lane: "mid" },
+  { id: "map-pressure", title: "Map pressure", group: "general-concepts", lane: "mid" },
+  { id: "statistics", title: "Statistics", group: "statistics" },
+] as const satisfies readonly { id: string; title: string; group: SectionGroupId; lane?: Lane }[];
 
 export type SectionId = (typeof SECTIONS)[number]["id"];
 
