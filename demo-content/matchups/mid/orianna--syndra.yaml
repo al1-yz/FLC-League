@@ -2,7 +2,7 @@ lane: mid
 champions: [orianna, syndra]
 insights:
   - id: demo-mid-orianna-syndra-0001
-    section: trading
+    section: trading-patterns
     about: both
     claim: Example Insight showing the format. Real Insights live in the private content repository.
     source: example-coach

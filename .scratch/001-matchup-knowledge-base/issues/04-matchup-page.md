@@ -6,7 +6,7 @@
 
 **Status:** ready-for-agent
 
-- [ ] Mid Matchup shows 14 Sections in template order; Bot Matchup shows its 14
+- [ ] Mid Matchup shows 14 Sections in template order; Bot Matchup shows its 21
 - [ ] Perspective follows the Focus Champion opened from; switch available when both are Focus Champions
 - [ ] Insights tagged about the Opponent appear as Opponent information
 - [ ] Conflicting Insights appear side by side, labeled, neither ranked above the other

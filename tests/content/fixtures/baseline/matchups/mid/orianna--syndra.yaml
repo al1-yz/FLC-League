@@ -2,7 +2,7 @@ lane: mid
 champions: [orianna, syndra]
 insights:
   - id: mid-orianna-syndra-0001
-    section: trading
+    section: trading-patterns
     about: syndra
     claim: Syndra wins short trades while her E is up, because she can stun Orianna as she steps up to place the ball.
     source: coach-curtis

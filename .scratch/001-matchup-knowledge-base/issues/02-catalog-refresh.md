@@ -4,10 +4,14 @@
 
 **Blocked by:** #01
 
-**Status:** ready-for-agent
+**Status:** done (awaiting user review)
 
-- [ ] Running the refresh command prints the Data Dragon version found and the number of champions
-- [ ] Catalog and icons are written only into the Content Repository's catalog area
-- [ ] The app shows the current Patch and last refresh date
-- [ ] Champion icons display offline; a missing icon falls back to the champion name
-- [ ] Data Dragon `16.22.1` maps to Patch `16.22`
+- [x] Running the refresh command prints the Data Dragon version found and the number of champions
+- [x] Catalog and icons are written only into the Content Repository's catalog area
+- [x] The app shows the current Patch and last refresh date
+- [x] Champion icons display offline; a missing icon falls back to the champion name
+- [x] Data Dragon `16.22.1` maps to Patch `16.22`
+
+## Comments
+
+- 2026-11-09 (Claude): Done early for the splash backgrounds (D13.3). Also downloads splash art for Focus Champions using `config/skins.yaml`; reports unknown skin names with the available list. Verified by running it against the private content repo (16.22.1, 173 champions, Dark Star Orianna found). No unit test: the only test point is the network call, which we agreed not to fake.

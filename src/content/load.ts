@@ -2,7 +2,7 @@ import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join, basename } from "node:path";
 import { parse } from "yaml";
 import type { z } from "zod";
-import { sectionsFor, type ChampionId, type Lane, type MatchupKey } from "./domain";
+import { SECTION_GROUPS, sectionsFor, type ChampionId, type Lane, type MatchupKey } from "./domain";
 import { catalogFile, focusChampionsFile, matchupFile, matchupInsight, sourceFile } from "./schemas";
 
 type Insight = z.infer<typeof matchupInsight>;
@@ -14,9 +14,13 @@ export type MatchupView = {
   lane: Lane;
   perspective: ChampionId;
   /** Perspective champion first, Opponent second. */
-  champions: [{ id: ChampionId; name: string }, { id: ChampionId; name: string }];
-  sections: { id: string; title: string; insights: InsightView[] }[];
+  champions: [ChampionView, ChampionView];
+  groups: { id: string; title: string; sections: SectionView[] }[];
 };
+
+export type SectionView = { id: string; title: string; insights: InsightView[] };
+
+export type ChampionView = { id: ChampionId; name: string; icon?: string; splash?: string; skin?: string };
 
 export type FocusChampion = { id: ChampionId; name: string; lane: Lane };
 
@@ -39,7 +43,17 @@ export function loadKnowledgeBase(contentDir: string): { kb: KnowledgeBase; repo
   const catalog = catalogFile.parse(
     JSON.parse(readFileSync(join(contentDir, "catalog", "catalog.json"), "utf8")),
   );
-  const championName = (id: ChampionId) => catalog.champions.find((c) => c.id === id)?.name ?? id;
+  const champion = (id: ChampionId): ChampionView => {
+    const c = catalog.champions.find((c) => c.id === id);
+    return {
+      id,
+      name: c?.name ?? id,
+      icon: c?.icon && `/catalog/${c.icon}`,
+      splash: c?.splash && `/catalog/${c.splash}`,
+      skin: c?.skin,
+    };
+  };
+  const championName = (id: ChampionId) => champion(id).name;
 
   const focus = focusChampionsFile.parse(readYaml(join(contentDir, "config", "focus-champions.yaml")));
 
@@ -69,16 +83,19 @@ export function loadKnowledgeBase(contentDir: string): { kb: KnowledgeBase; repo
         key,
         lane: m.lane,
         perspective,
-        champions: [
-          { id: perspective, name: championName(perspective) },
-          { id: opponent, name: championName(opponent) },
-        ],
-        sections: sectionsFor(m.lane).map((s) => ({
-          id: s.id,
-          title: s.title,
-          insights: m.insights
-            .filter((i) => i.section === s.id)
-            .map((i) => ({ ...i, source: sources.get(i.source) ?? { id: i.source, name: i.source } })),
+        champions: [champion(perspective), champion(opponent)],
+        groups: SECTION_GROUPS.map((g) => ({
+          id: g.id,
+          title: g.title,
+          sections: sectionsFor(m.lane)
+            .filter((s) => s.group === g.id)
+            .map((s) => ({
+              id: s.id,
+              title: s.title,
+              insights: m.insights
+                .filter((i) => i.section === s.id)
+                .map((i) => ({ ...i, source: sources.get(i.source) ?? { id: i.source, name: i.source } })),
+            })),
         })),
       };
     },
