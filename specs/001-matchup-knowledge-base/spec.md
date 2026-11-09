@@ -308,7 +308,7 @@ In a Matchup's Statistics section, the user sees hand-recorded Third-party Refer
 - A Matchup appears on a Focus Champion page once it has any content (Insight, Me note, Verdict or Third-party Reference). Other Opponents are reachable through search (FR-031).
 - Statistical difficulty is shown as "not available" until feature 002 provides own statistics. Third-party References do not produce a difficulty rating.
 - The quote length limit (200 characters, one sentence) is a working default and may be tuned.
-- The visual style follows `docs/design/reference-direction.webp` (dark, glassy, teal accents) as direction, not a pixel spec.
+- The visual style follows the "Antique Gold & Deep Violet" art direction (`docs/design/palette-antique-gold-deep-violet.png`, D12.1): deep violet surfaces, antique gold structure, ivory text, slow ambient animation, with data kept high-contrast and still. `docs/design/reference-direction.webp` remains a layout reference only.
 - Initial Opponents for the validation slice are chosen by the user or suggested by Claude (D1.8); only Orianna vs Syndra must be complete for SC-001.
 
 ## Dependencies

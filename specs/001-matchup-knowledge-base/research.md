@@ -45,7 +45,7 @@ Phase 0 of `/speckit-plan`. The stack itself was decided with the user (ADR 0004
 
 ## R7. Styling
 
-- **Decision**: Tailwind CSS 4.x with theme tokens set as CSS variables (dark background, glass panels, a teal accent, and difficulty colors at 5 levels plus a neutral), following `docs/design/reference-direction.webp`.
+- **Decision**: Tailwind CSS 4.x with theme tokens as CSS variables, following the "Antique Gold & Deep Violet" palette (D12.1): violet 950–600, gold 200–700 around brand colors #2C1F33 and #B9A38B, ivory ink. Fonts are self-hosted from npm (Fraunces for display, Jost for text) so the app stays offline. Ambient motion (drifting glow, panning art-deco pattern, title glint, entrance reveals) is pure CSS and switches off under `prefers-reduced-motion`.
 
 ## R8. Testing (constitution VII)
 

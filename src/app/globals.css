@@ -1,16 +1,223 @@
 @import "tailwindcss";
 
+/*
+ * Art direction: "Antique Gold & Deep Violet" (docs/design/palette-antique-gold-deep-violet.png).
+ * Deep violet surfaces, antique gold for structure and emphasis, ivory for reading.
+ * Motion is slow and ambient; data stays high-contrast and still.
+ */
 @theme {
-  --color-canvas: #070d0f;
-  --color-panel: rgb(18 32 36 / 0.72);
-  --color-panel-border: rgb(94 234 212 / 0.14);
-  --color-ink: #e6f2f0;
-  --color-ink-muted: #8aa6a2;
-  --color-accent: #2dd4bf;
+  --color-violet-950: #120b16;
+  --color-violet-900: #1b1221;
+  --color-violet-800: #2c1f33;
+  --color-violet-700: #3a2a43;
+  --color-violet-600: #4d3a58;
+
+  --color-gold-200: #ece2d4;
+  --color-gold-300: #dccbb6;
+  --color-gold-400: #cbb69e;
+  --color-gold-500: #b9a38b;
+  --color-gold-600: #9a8570;
+  --color-gold-700: #75644f;
+
+  --color-ink: #f4ede4;
+  --color-ink-muted: #b8aaa0;
+  --color-ink-faint: #85776f;
+
+  --font-display: "Fraunces Variable", ui-serif, Georgia, serif;
+  --font-sans: "Jost Variable", ui-sans-serif, system-ui, sans-serif;
+
+  --ease-luxe: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+html {
+  color-scheme: dark;
 }
 
 body {
-  background: radial-gradient(ellipse at top left, #0f2a2c 0%, var(--color-canvas) 60%);
+  background: var(--color-violet-950);
   color: var(--color-ink);
-  min-height: 100vh;
+  font-family: var(--font-sans);
+  font-feature-settings: "tnum" 1;
+}
+
+/* ---------- Ambient backdrop ---------- */
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background: radial-gradient(120% 90% at 15% 0%, var(--color-violet-800) 0%, var(--color-violet-950) 62%);
+}
+
+/* Drifting light: one gold, one violet. */
+.backdrop__glow {
+  position: absolute;
+  width: 60vmax;
+  height: 60vmax;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.35;
+}
+.backdrop__glow--gold {
+  top: -20vmax;
+  right: -15vmax;
+  background: radial-gradient(circle, rgb(185 163 139 / 0.55), transparent 65%);
+  animation: drift-a 38s ease-in-out infinite alternate;
+}
+.backdrop__glow--violet {
+  bottom: -25vmax;
+  left: -10vmax;
+  background: radial-gradient(circle, rgb(110 70 130 / 0.6), transparent 65%);
+  animation: drift-b 46s ease-in-out infinite alternate;
+}
+
+/* Art-deco fan scales, panning slowly. */
+.backdrop__pattern {
+  position: absolute;
+  inset: -64px;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='32' viewBox='0 0 64 32'%3E%3Cg fill='none' stroke='%23B9A38B' stroke-width='0.7'%3E%3Cpath d='M0 32a32 32 0 0 1 64 0M8 32a24 24 0 0 1 48 0M16 32a16 16 0 0 1 32 0M24 32a8 8 0 0 1 16 0'/%3E%3Cpath d='M32 0A32 32 0 0 1 0 32M24 0A24 24 0 0 1 0 24M16 0A16 16 0 0 1 0 16M8 0A8 8 0 0 1 0 8'/%3E%3Cpath d='M32 0a32 32 0 0 0 32 32M40 0a24 24 0 0 0 24 24M48 0a16 16 0 0 0 16 16M56 0a8 8 0 0 0 8 8'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 64px 32px;
+  mask-image: radial-gradient(ellipse at 70% 20%, black 0%, transparent 75%);
+  animation: pan 90s linear infinite;
+}
+
+/* Film grain for depth. */
+.backdrop__grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.08;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@keyframes drift-a {
+  to { transform: translate(-12vmax, 10vmax) scale(1.15); }
+}
+@keyframes drift-b {
+  to { transform: translate(14vmax, -8vmax) scale(1.1); }
+}
+@keyframes pan {
+  to { background-position: 128px 64px; }
+}
+
+/* ---------- Surfaces ---------- */
+
+/* Glass panel with a gold hairline that fades around the edge. */
+.panel {
+  position: relative;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  background:
+    linear-gradient(rgb(28 18 33 / 0.78), rgb(28 18 33 / 0.78)) padding-box,
+    linear-gradient(140deg, rgb(185 163 139 / 0.55), rgb(185 163 139 / 0.06) 45%, rgb(185 163 139 / 0.3)) border-box;
+  backdrop-filter: blur(14px);
+  overflow: hidden;
+  transition: transform 0.5s var(--ease-luxe), box-shadow 0.5s var(--ease-luxe);
+}
+.panel--interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px -24px rgb(185 163 139 / 0.45);
+}
+/* Light sweep across the panel on hover. */
+.panel--interactive::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 35%, rgb(236 226 212 / 0.08) 50%, transparent 65%);
+  transform: translateX(-100%);
+  transition: transform 0.9s var(--ease-luxe);
+  pointer-events: none;
+}
+.panel--interactive:hover::after {
+  transform: translateX(100%);
+}
+
+/* ---------- Typography accents ---------- */
+
+/* A slow gold glint travelling across display titles. */
+.shimmer {
+  background: linear-gradient(
+    110deg,
+    var(--color-ink) 0%,
+    var(--color-ink) 42%,
+    var(--color-gold-300) 50%,
+    var(--color-ink) 58%,
+    var(--color-ink) 100%
+  );
+  background-size: 260% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: glint 9s var(--ease-luxe) infinite;
+}
+@keyframes glint {
+  0%, 15% { background-position: 100% 0; }
+  65%, 100% { background-position: 0% 0; }
+}
+
+.eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--color-gold-500);
+}
+
+/* ---------- Ornament divider ---------- */
+
+.ornament path {
+  stroke-dasharray: 400;
+  stroke-dashoffset: 400;
+  animation: draw 1.6s var(--ease-luxe) 0.2s forwards;
+}
+.ornament rect {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: spin-in 1.2s var(--ease-luxe) 0.6s both;
+}
+@keyframes draw {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes spin-in {
+  from { opacity: 0; transform: rotate(-90deg) scale(0.2); }
+  to { opacity: 1; transform: rotate(45deg) scale(1); }
+}
+
+/* ---------- Entrance ---------- */
+
+.reveal {
+  animation: rise 0.8s var(--ease-luxe) both;
+  animation-delay: calc(var(--i, 0) * 55ms);
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); filter: blur(4px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+
+/* ---------- Chips ---------- */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid rgb(185 163 139 / 0.28);
+  background: rgb(185 163 139 / 0.07);
+  font-size: 0.72rem;
+  color: var(--color-gold-300);
+  white-space: nowrap;
+}
+
+/* ---------- Accessibility ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

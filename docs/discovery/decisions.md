@@ -104,3 +104,7 @@ Each grilling round's outcomes. **D** = decided, **O** = open, **H** = hypothesi
 ## Repositories — 2026-11-09
 
 - **D11.1** Public code repo: `al1-yz/FLC-League` (remote `origin`). Private content repo: `al1-yz/FLC-League-private`, cloned at `/home/kcab/FLC-League-private`.
+
+## Art direction — 2026-11-09
+
+- **D12.1** Art direction changed to **"Antique Gold & Deep Violet"** (#B9A38B / #2C1F33; `docs/design/palette-antique-gold-deep-violet.png`). It supersedes the teal accent from D1.14; the original reference image is kept for layout only. Luxurious and elegant: Fraunces display serif + Jost text (self-hosted), animated ambient patterns (drifting glow, art-deco fan pattern, gold title glint, drawn ornaments, staggered reveals), with data shown high-contrast and static. Motion respects `prefers-reduced-motion`.

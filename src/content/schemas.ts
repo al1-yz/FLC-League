@@ -35,3 +35,8 @@ export const catalogFile = z.object({
   refreshedAt: z.string(),
   champions: z.array(z.object({ id: z.string(), name: z.string() })),
 });
+
+export const focusChampionsFile = z.object({
+  mid: z.array(z.string()).default([]),
+  bot: z.array(z.string()).default([]),
+});
