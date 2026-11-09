@@ -1,0 +1,13 @@
+lane: mid
+champions: [orianna, syndra]
+insights:
+  - id: mid-orianna-syndra-0001
+    section: trading
+    about: syndra
+    claim: Syndra wins short trades while her E is up, because she can stun Orianna as she steps up to place the ball.
+    source: coach-curtis
+    link: https://www.youtube.com/watch?v=example
+    locator: "07:42"
+    patch: "16.22"
+    noted: 2026-11-09
+    collectedBy: claude
