@@ -3,7 +3,7 @@ import { join, basename } from "node:path";
 import { parse } from "yaml";
 import type { z } from "zod";
 import { sectionsFor, type ChampionId, type Lane, type MatchupKey } from "./domain";
-import { catalogFile, matchupFile, matchupInsight, sourceFile } from "./schemas";
+import { catalogFile, focusChampionsFile, matchupFile, matchupInsight, sourceFile } from "./schemas";
 
 type Insight = z.infer<typeof matchupInsight>;
 
@@ -18,7 +18,10 @@ export type MatchupView = {
   sections: { id: string; title: string; insights: InsightView[] }[];
 };
 
+export type FocusChampion = { id: ChampionId; name: string; lane: Lane };
+
 export type KnowledgeBase = {
+  focusChampions(lane: Lane): FocusChampion[];
   matchup(key: MatchupKey, perspective: ChampionId): MatchupView;
 };
 
@@ -38,6 +41,8 @@ export function loadKnowledgeBase(contentDir: string): { kb: KnowledgeBase; repo
   );
   const championName = (id: ChampionId) => catalog.champions.find((c) => c.id === id)?.name ?? id;
 
+  const focus = focusChampionsFile.parse(readYaml(join(contentDir, "config", "focus-champions.yaml")));
+
   const sources = new Map<string, { id: string; name: string }>();
   for (const file of yamlFiles(join(contentDir, "sources"))) {
     const id = basename(file, ".yaml");
@@ -53,6 +58,9 @@ export function loadKnowledgeBase(contentDir: string): { kb: KnowledgeBase; repo
   }
 
   const kb: KnowledgeBase = {
+    focusChampions(lane) {
+      return focus[lane].map((id) => ({ id, name: championName(id), lane }));
+    },
     matchup(key, perspective) {
       const m = matchups.get(key);
       if (!m) throw new Error(`Unknown Matchup: ${key}`);
