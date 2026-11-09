@@ -1,0 +1,13 @@
+lane: mid
+champions: [orianna, syndra]
+insights:
+  - id: demo-mid-orianna-syndra-0001
+    section: trading
+    about: both
+    claim: Example Insight showing the format. Real Insights live in the private content repository.
+    source: example-coach
+    link: https://example.com/video
+    locator: "01:00"
+    patch: "16.22"
+    noted: 2026-11-09
+    collectedBy: user

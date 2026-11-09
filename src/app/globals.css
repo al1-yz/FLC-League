@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+@theme {
+  --color-canvas: #070d0f;
+  --color-panel: rgb(18 32 36 / 0.72);
+  --color-panel-border: rgb(94 234 212 / 0.14);
+  --color-ink: #e6f2f0;
+  --color-ink-muted: #8aa6a2;
+  --color-accent: #2dd4bf;
+}
+
+body {
+  background: radial-gradient(ellipse at top left, #0f2a2c 0%, var(--color-canvas) 60%);
+  color: var(--color-ink);
+  min-height: 100vh;
+}

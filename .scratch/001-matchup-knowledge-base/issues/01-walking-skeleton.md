@@ -4,12 +4,16 @@
 
 **Blocked by:** None (can start immediately)
 
-**Status:** ready-for-agent
+**Status:** done (awaiting user review)
 
-- [ ] App starts locally and opens on localhost without network access
-- [ ] Content Repository location comes from local configuration; without it the demo content is used
-- [ ] A Matchup file in the documented format renders with its Insights under the correct Sections in template order
-- [ ] Each Insight shows Source name, link, Patch and noted date
-- [ ] Riot "not endorsed" notice is on every page
-- [ ] Unit and end-to-end test runners execute at least one passing test each
-- [ ] No collected third-party content is added to the public repository
+- [x] App starts locally and opens on localhost without network access
+- [x] Content Repository location comes from local configuration; without it the demo content is used
+- [x] A Matchup file in the documented format renders with its Insights under the correct Sections in template order
+- [x] Each Insight shows Source name, link, Patch and noted date
+- [x] Riot "not endorsed" notice is on every page
+- [x] Unit and end-to-end test runners execute at least one passing test each
+- [x] No collected third-party content is added to the public repository
+
+## Comments
+
+- 2026-11-09 (Claude): Implemented test-first at the agreed test points. S1: Vitest `tests/content/matchup-view.test.ts` through `loadKnowledgeBase` → `kb.matchup`. S2: Playwright `tests/e2e/study-matchup.spec.ts` (page, Section order, credited Insight with timestamped link, sidebar, Riot notice). The demo-content fallback was verified manually. Validation rules are deferred to ticket 03 by design.

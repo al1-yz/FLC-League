@@ -100,3 +100,7 @@ Each grilling round's outcomes. **D** = decided, **O** = open, **H** = hypothesi
 ## Tickets, feature 001 — 2026-11-09
 
 - **D10.1** 17 vertical-slice tickets approved and written to `.scratch/001-matchup-knowledge-base/issues/` (local markdown tracker). 15 are `ready-for-agent`; 15 and 16 (content collection) are `ready-for-human`. Planning for feature 001 is complete. Feature 002 (statistics collector) is a separate spec cycle.
+
+## Repositories — 2026-11-09
+
+- **D11.1** Public code repo: `al1-yz/FLC-League` (remote `origin`). Private content repo: `al1-yz/FLC-League-private`, cloned at `/home/kcab/FLC-League-private`.
