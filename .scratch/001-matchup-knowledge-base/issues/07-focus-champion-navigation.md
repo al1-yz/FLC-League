@@ -4,10 +4,14 @@
 
 **Blocked by:** #01
 
-**Status:** ready-for-agent
+**Status:** done (awaiting user review)
 
-- [ ] Sidebar shows Mid and Bot with their Focus Champions plus Archetypes, Opponents, General Concepts
-- [ ] Table lists exactly the Matchups with content, sortable by every column
-- [ ] Searching a champion without content opens an empty Matchup with gap markers
-- [ ] Akali vs Zed appears on both Akali's and Zed's pages from each perspective
-- [ ] Focus Champions come from configuration; adding one needs no code change
+- [x] Sidebar shows Mid and Bot with their Focus Champions plus Archetypes, Opponents, General Concepts
+- [x] Table lists exactly the Matchups with content, sortable by every column
+- [x] Searching a champion without content opens an empty Matchup with gap markers
+- [x] Akali vs Zed appears on both Akali's and Zed's pages from each perspective
+- [x] Focus Champions come from configuration; adding one needs no code change
+
+## Comments
+
+- 2026-11-11 (Claude): Navigation is the top bar (D16.2), not a sidebar. The champion capsule page (D16.3) now has a sortable Matchup table (Opponent, Archetype, your Verdict, Statistical "not available", Insights, Unreviewed) and a search that opens an empty Matchup for any Catalog champion. A Matchup with only a Verdict or Me notes is listed too. Unreviewed counts Claude-collected Insights that are not in `me/review.yaml` (approval itself is ticket 09).

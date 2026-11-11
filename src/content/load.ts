@@ -71,10 +71,21 @@ export type ChampionProfile = ChampionView & {
   species?: string;
 };
 
-export type MatchupSummary = { key: MatchupKey; lane: Lane; opponent: ChampionView; insights: number };
+export type MatchupSummary = {
+  key: MatchupKey;
+  lane: Lane;
+  opponent: ChampionView;
+  opponentArchetype?: string;
+  /** Latest Verdict difficulty, if any (FR-029). */
+  verdict?: number;
+  insights: number;
+  unreviewed: number;
+};
 
 export type KnowledgeBase = {
   currentPatch(): string;
+  /** Every Catalog champion, for the Matchup search (FR-031). */
+  champions(): ChampionView[];
   champion(id: ChampionId): ChampionView;
   profile(id: ChampionId): ChampionProfile;
   matchupsFor(focus: ChampionId, lane: Lane): MatchupSummary[];
@@ -265,6 +276,21 @@ export function loadKnowledgeBase(contentDir: string): { kb: KnowledgeBase; repo
 
   const verdicts = readList<VerdictRecord>(contentDir, "verdicts.yaml");
   const meNotes = readList<MeNoteRecord>(contentDir, "notes.yaml");
+  const approved = new Set(readList<string>(contentDir, "review.yaml"));
+  const isUnreviewed = (i: Insight) => i.collectedBy === "claude" && !approved.has(i.id);
+
+  /** A Matchup without a content file still exists if it is a valid pair with a Focus Champion (FR-031). */
+  const matchupOrEmpty = (key: MatchupKey): Matchup | undefined => {
+    const found = matchups.get(key);
+    if (found) return found;
+    const [lane, pair] = key.split("/");
+    const [a, b] = pair?.split("--") ?? [];
+    if ((lane !== "mid" && lane !== "bot") || !a || !b || a === b || [a, b].sort()[0] !== a) return undefined;
+    if (!inCatalog(a) || !inCatalog(b) || !(focus[lane].includes(a) || focus[lane].includes(b))) return undefined;
+    return { lane, champions: [a, b], insights: [], references: [], conflicts: [] };
+  };
+  const latestVerdict = (key: MatchupKey) =>
+    verdicts.filter((v) => v.matchup === key).sort((x, y) => comparePatch(y.patch, x.patch))[0];
 
   const kb: KnowledgeBase = {
     currentPatch: () => catalog.currentPatch,
@@ -278,21 +304,36 @@ export function loadKnowledgeBase(contentDir: string): { kb: KnowledgeBase; repo
         species: p?.species,
       };
     },
+    champions: () => catalog.champions.map((c) => champion(c.id)),
     matchupsFor(focusId, lane) {
-      return [...matchups.entries()]
+      const keys = new Set([
+        ...matchups.keys(),
+        ...verdicts.map((v) => v.matchup),
+        ...meNotes.flatMap((n) => ("matchup" in n.target ? [n.target.matchup] : [])),
+      ]);
+      return [...keys]
+        .map((key) => [key, matchupOrEmpty(key)] as const)
+        .filter((entry): entry is readonly [string, Matchup] => Boolean(entry[1]))
         .filter(([, m]) => m.lane === lane && m.champions.includes(focusId))
-        .map(([key, m]) => ({
-          key,
-          lane,
-          opponent: champion(m.champions[0] === focusId ? m.champions[1] : m.champions[0]),
-          insights: m.insights.length,
-        }));
+        .map(([key, m]) => {
+          const opponentId = m.champions[0] === focusId ? m.champions[1] : m.champions[0];
+          return {
+            key,
+            lane,
+            opponent: champion(opponentId),
+            opponentArchetype: archetypeName(profiles.get(opponentId)?.primaryArchetype),
+            verdict: latestVerdict(key)?.difficulty,
+            insights: m.insights.length,
+            unreviewed: m.insights.filter(isUnreviewed).length,
+          };
+        })
+        .sort((x, y) => x.opponent.name.localeCompare(y.opponent.name));
     },
     focusChampions(lane) {
       return focus[lane].map((id) => ({ id, name: champion(id).name, lane }));
     },
     matchup(key, perspective) {
-      const m = matchups.get(key);
+      const m = matchupOrEmpty(key);
       if (!m) throw new Error(`Unknown Matchup: ${key}`);
       const opponent = m.champions[0] === perspective ? m.champions[1] : m.champions[0];
       const bothFocus = m.champions.every((c) => focus[m.lane].includes(c));
