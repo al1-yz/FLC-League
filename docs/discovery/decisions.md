@@ -151,3 +151,7 @@ Each grilling round's outcomes. **D** = decided, **O** = open, **H** = hypothesi
 ## Ticket 03 — 2026-11-11
 
 - **D20.1** Validation reports instead of throwing. Entry-level rule breaks drop only that entry, file-level ones drop the file, and every issue is listed at `/validation`, with a count in the top bar. A new **R-SHAPE** rule covers malformed entries and files. Insight ids are unique across the whole repository (the first occurrence wins).
+
+## Readability — 2026-11-11
+
+- **D21.1** Base font size is 18px (112.5%). Tiny labels are at least about 0.78rem, extralight is raised to light, and light body text to normal. The muted and faint text colors are brightened (#d2cbc5, #a69d97), and chart text is scaled up about 30%.

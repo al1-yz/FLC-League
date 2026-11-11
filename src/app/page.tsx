@@ -16,12 +16,12 @@ export default function Landing() {
 
       <section className="relative mx-auto flex min-h-screen max-w-7xl flex-col justify-between px-10 pt-40 pb-20">
         <div className="reveal">
-          <h1 className="text-[clamp(5rem,15vw,12rem)] font-extralight leading-none tracking-[0.2em] text-ink/90">FLC</h1>
+          <h1 className="text-[clamp(5rem,15vw,12rem)] font-light leading-none tracking-[0.2em] text-ink/90">FLC</h1>
           <p className="mt-5 text-sm uppercase tracking-[0.42em] text-ink-muted">Focus · Learn · Climb</p>
         </div>
 
         <div className="reveal max-w-md" style={{ "--i": 4 } as React.CSSProperties}>
-          <p className="text-2xl font-light tracking-wide text-ink">Full Lane Control</p>
+          <p className="text-2xl font-normal tracking-wide text-ink">Full Lane Control</p>
           <p className="mt-2 text-sm text-ink-muted">A personal study of lane matchups.</p>
           <p className="mt-5 text-sm leading-relaxed text-ink-faint">
             What happens in a lane, why it happens, and how to answer it — gathered from the coaches who

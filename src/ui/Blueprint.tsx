@@ -52,10 +52,10 @@ export function PhaseStack({ phases }: { phases: { id: string; label: string; se
             <ellipse cx={cx} cy={y} rx="22" ry="7" fill="none" stroke={n ? ACCENT : FAINT} className={n ? "pulse-soft" : ""} />
             <path d={leader} fill="none" stroke={FAINT} strokeWidth="0.8" />
             <a href={`#${phase.id}`}>
-              <text x={lx} y={y - 40} textAnchor={left ? "start" : "end"} fontSize="11" letterSpacing="3" fill="#f2eeea">
+              <text x={lx} y={y - 40} textAnchor={left ? "start" : "end"} fontSize="14.3" letterSpacing="3" fill="#f2eeea">
                 {phase.label.toUpperCase()}
               </text>
-              <text x={lx} y={y - 22} textAnchor={left ? "start" : "end"} fontSize="10" fill={n ? ACCENT : "#857c78"}>
+              <text x={lx} y={y - 22} textAnchor={left ? "start" : "end"} fontSize="13" fill={n ? ACCENT : "#a69d97"}>
                 {notesLabel(n)}
               </text>
             </a>
@@ -80,8 +80,8 @@ export function DetailCircle({ id, label, sections, motif }: { id: string; label
         {motif === "build" && <path d="M38 78 C 46 50, 52 50, 60 40 C 68 50, 74 50, 82 78 M44 64 H76" fill="none" stroke={LINE} />}
       </svg>
       <span>
-        <span className="block text-[0.78rem] uppercase tracking-[0.3em] text-ink transition-colors group-hover:text-blush-300">{label}</span>
-        <span className="mt-1 block text-[0.72rem] text-ink-faint">{sections.map((s) => s.title).join(" · ")}</span>
+        <span className="block text-[0.9rem] uppercase tracking-[0.3em] text-ink transition-colors group-hover:text-blush-300">{label}</span>
+        <span className="mt-1 block text-[0.85rem] text-ink-faint">{sections.map((s) => s.title).join(" · ")}</span>
         <span className={`mt-1 block text-xs ${n ? "text-blush-400" : "text-ink-faint"}`}>{notesLabel(n)}</span>
       </span>
     </a>
@@ -116,12 +116,12 @@ export function LaneSection() {
         <animate attributeName="d" dur="15s" repeatCount="indefinite" values={[waves[1], waves[0], waves[1]].join(";")} calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1" />
       </path>
       {phases.map((p, i) => (
-        <text key={p.label} x={(x(p.from) + x(p.to)) / 2} y="22" textAnchor="middle" fontSize="10" letterSpacing="3" fill={i === 0 ? ACCENT : "#bdb5b0"}>
+        <text key={p.label} x={(x(p.from) + x(p.to)) / 2} y="22" textAnchor="middle" fontSize="13" letterSpacing="3" fill={i === 0 ? ACCENT : "#bdb5b0"}>
           {p.label.toUpperCase()}
         </text>
       ))}
       {Array.from({ length: 18 }, (_, i) => (
-        <text key={i} x={x(i + 1)} y="118" textAnchor="middle" fontSize="9" fill={[6, 11, 16].includes(i + 1) ? ACCENT : "#857c78"}>
+        <text key={i} x={x(i + 1)} y="118" textAnchor="middle" fontSize="11.7" fill={[6, 11, 16].includes(i + 1) ? ACCENT : "#a69d97"}>
           {i + 1}
         </text>
       ))}
