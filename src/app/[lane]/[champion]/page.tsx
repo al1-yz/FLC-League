@@ -54,7 +54,7 @@ export default async function ChampionPage({ params }: { params: Promise<{ lane:
         </article>
 
         <section aria-labelledby="matchups-title" className="reveal mt-16 w-full max-w-3xl" style={{ "--i": 3 } as React.CSSProperties}>
-          <h2 id="matchups-title" className="text-center text-[0.72rem] uppercase tracking-[0.3em] text-ink-muted">
+          <h2 id="matchups-title" className="text-center text-[0.85rem] uppercase tracking-[0.3em] text-ink-muted">
             Matchups
           </h2>
           {matchups.length ? (

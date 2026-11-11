@@ -48,10 +48,10 @@ export default async function MatchupPage({
 
       {/* Title block */}
       <header className="legible mx-auto max-w-7xl px-10 pt-16 pb-10">
-        <p className="reveal text-[0.72rem] uppercase tracking-[0.4em] text-ink-muted">
+        <p className="reveal text-[0.85rem] uppercase tracking-[0.4em] text-ink-muted">
           {view.lane === "mid" ? "Mid lane" : "Bot lane"} · Matchup analysis · Patch {kb.currentPatch()}
         </p>
-        <h1 className="reveal mt-4 text-6xl font-extralight uppercase tracking-[0.22em] text-ink md:text-7xl" style={{ "--i": 1 } as React.CSSProperties}>
+        <h1 className="reveal mt-4 text-6xl font-light uppercase tracking-[0.22em] text-ink md:text-7xl" style={{ "--i": 1 } as React.CSSProperties}>
           {you.name} <span className="text-blush-400">vs</span> {opponent.name}
         </h1>
         <dl className="reveal mt-8 grid max-w-3xl grid-cols-2 gap-x-10 gap-y-3 text-sm md:grid-cols-4" style={{ "--i": 2 } as React.CSSProperties}>
@@ -134,7 +134,7 @@ export default async function MatchupPage({
 function Spec({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-[0.62rem] uppercase tracking-[0.28em] text-ink-faint">{label}</dt>
+      <dt className="text-[0.9rem] uppercase tracking-[0.28em] text-ink-faint">{label}</dt>
       <dd className="mt-1 text-ink">{value}</dd>
     </div>
   );
@@ -145,8 +145,8 @@ function Annotation({ index, section }: { index: number; section: SectionView })
     <section id={section.id} className="scroll-mt-24">
       <h3 className="flex items-baseline gap-4 pb-2">
         <span aria-hidden="true" className="river__node" />
-        <span className="text-sm font-extralight tabular-nums text-blush-400">{String(index).padStart(2, "0")}</span>
-        <span className="text-[0.78rem] uppercase tracking-[0.3em] text-ink">{section.title}</span>
+        <span className="text-sm font-normal tabular-nums text-blush-400">{String(index).padStart(2, "0")}</span>
+        <span className="text-[0.9rem] uppercase tracking-[0.3em] text-ink">{section.title}</span>
       </h3>
       {section.insights.length ? (
         <ul className="mt-4 space-y-5">
@@ -167,7 +167,7 @@ function Note({ insight }: { insight: InsightView }) {
       <article className="pl-9 transition-transform duration-700 hover:translate-x-1">
         <p className="leading-relaxed text-ink-muted">{insight.claim}</p>
         {insight.quote && <p className="mt-2 text-sm italic text-lavender-200">“{insight.quote}”</p>}
-        <p className="mt-2 text-[0.7rem] uppercase tracking-[0.18em] text-ink-faint">
+        <p className="mt-2 text-[0.82rem] uppercase tracking-[0.18em] text-ink-faint">
           <a href={linkWithTimestamp(insight.link, insight.locator)} target="_blank" rel="noreferrer" className="text-blush-400 hover:text-blush-300">
             {insight.source.name}
             {insight.locator && ` @ ${insight.locator}`}

@@ -21,8 +21,8 @@
   --color-blush-500: #d99c87;
 
   --color-ink: #f2eeea;
-  --color-ink-muted: #bdb5b0;
-  --color-ink-faint: #857c78;
+  --color-ink-muted: #d2cbc5;
+  --color-ink-faint: #a69d97;
 
   --font-sans: "Aeonik", var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-display: "Aeonik", var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
@@ -32,6 +32,7 @@
 
 html {
   color-scheme: dark;
+  font-size: 112.5%; /* 18px base for readability (D21.1) */
 }
 
 body {
@@ -142,7 +143,7 @@ body {
 /* ---------- Typography accents ---------- */
 
 .eyebrow {
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -316,7 +317,7 @@ a:hover > .rail-node {
   border-radius: 999px;
   border: 1px solid rgb(184 179 202 / 0.22);
   background: rgb(184 179 202 / 0.06);
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   color: var(--color-lavender-200);
   white-space: nowrap;
 }
@@ -520,7 +521,7 @@ a:hover > .rail-node {
 }
 .sheet__title {
   margin-bottom: 1.25rem;
-  font-size: 0.78rem;
+  font-size: 0.9rem;
   font-weight: 400;
   letter-spacing: 0.4em;
   text-transform: uppercase;

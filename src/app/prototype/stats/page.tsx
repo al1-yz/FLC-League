@@ -17,7 +17,7 @@ const pct = (n: number, digits = 1) => `${n.toFixed(digits)}%`;
 const BLUSH = "#E5B8A8";
 const LAVENDER = "#B8B3CA";
 const MAUVE = "#988382";
-const INK_FAINT = "#857c78";
+const INK_FAINT = "#a69d97";
 
 /** Lavender when the matchup favours you, blush when it threatens you. */
 const tone = (winRate: number) => (winRate >= 50 ? LAVENDER : BLUSH);
@@ -40,8 +40,8 @@ export default async function StatsPrototype({ searchParams }: { searchParams: P
         </p>
 
         <header className="reveal mt-10" style={{ "--i": 1 } as React.CSSProperties}>
-          <p className="text-[0.72rem] uppercase tracking-[0.4em] text-ink-muted">Matchup analysis · Emerald+ · Patch {kb.currentPatch()}</p>
-          <h1 className="mt-4 text-6xl font-extralight uppercase tracking-[0.2em] text-ink md:text-7xl">
+          <p className="text-[0.85rem] uppercase tracking-[0.4em] text-ink-muted">Matchup analysis · Emerald+ · Patch {kb.currentPatch()}</p>
+          <h1 className="mt-4 text-6xl font-light uppercase tracking-[0.2em] text-ink md:text-7xl">
             {you.name} <span className="text-blush-400">in numbers</span>
           </h1>
         </header>
@@ -127,8 +127,8 @@ function RingStat({ label, value, max, display, index }: { label: string; value:
         </circle>
       </svg>
       <div>
-        <p className="text-[0.62rem] uppercase tracking-[0.3em] text-ink-faint">{label}</p>
-        <p className="mt-1 text-3xl font-light tabular-nums text-ink">{display}</p>
+        <p className="text-[0.9rem] uppercase tracking-[0.3em] text-ink-faint">{label}</p>
+        <p className="mt-1 text-3xl font-normal tabular-nums text-ink">{display}</p>
       </div>
     </div>
   );
@@ -139,18 +139,18 @@ function TierBadge({ tier, games, index }: { tier: string; games: number; index:
   return (
     <div className="reveal float" style={{ "--i": index, animationDelay: `${index * -1.3}s` } as React.CSSProperties}>
       <div className="flex items-center gap-5">
-        <div className="breathe-glow grid size-20 place-items-center rounded-full border border-blush-400/50 text-4xl font-extralight text-blush-300">
+        <div className="breathe-glow grid size-20 place-items-center rounded-full border border-blush-400/50 text-4xl font-light text-blush-300">
           {tier}
         </div>
         <div>
-          <p className="text-[0.62rem] uppercase tracking-[0.3em] text-ink-faint">Tier</p>
+          <p className="text-[0.9rem] uppercase tracking-[0.3em] text-ink-faint">Tier</p>
           <p className="mt-1 text-sm text-ink-muted">{games.toLocaleString("en")} games</p>
         </div>
       </div>
       <div className="mt-5 h-px bg-lavender-300/15">
         <div className="h-px bg-gradient-to-r from-blush-400 to-lavender-300 shadow-[0_0_8px_rgb(229_184_168/0.8)]" style={{ width: `${xp * 100}%` }} />
       </div>
-      <p className="mt-1.5 text-[0.62rem] text-ink-faint">Sample size toward 100k games</p>
+      <p className="mt-1.5 text-[0.9rem] text-ink-faint">Sample size toward 100k games</p>
     </div>
   );
 }
@@ -198,11 +198,11 @@ function InfluenceGraph({ you, opponents, data }: { you: ChampionView; opponents
                 {opponent.icon ? (
                   <image href={opponent.icon} x="-19" y="-19" width="38" height="38" clipPath="url(#node-clip)" />
                 ) : (
-                  <text textAnchor="middle" dy="4" fontSize="11" fill="#f2eeea">
+                  <text textAnchor="middle" dy="4" fontSize="14.3" fill="#f2eeea">
                     {opponent.name.slice(0, 3)}
                   </text>
                 )}
-                <text textAnchor="middle" y="37" fontSize="10.5" fill={tone(d.winRate)} className="tabular-nums">
+                <text textAnchor="middle" y="37" fontSize="13.7" fill={tone(d.winRate)} className="tabular-nums">
                   {pct(d.winRate)}
                 </text>
               </g>
@@ -213,7 +213,7 @@ function InfluenceGraph({ you, opponents, data }: { you: ChampionView; opponents
       <circle cx={c} cy={c} r="44" fill="none" stroke={BLUSH} strokeOpacity="0.3" className="breathe-ring" style={{ transformOrigin: `${c}px ${c}px` }} />
       <circle cx={c} cy={c} r="35" fill="#23211b" stroke={BLUSH} strokeWidth="1" style={{ filter: "drop-shadow(0 0 16px rgb(229 184 168 / 0.6))" }} />
       {you.icon && <image href={you.icon} x={c - 32} y={c - 32} width="64" height="64" clipPath="url(#you-clip)" />}
-      <g fontSize="10" fill={INK_FAINT}>
+      <g fontSize="13" fill={INK_FAINT}>
         <circle cx="10" cy={size - 22} r="3.5" fill={LAVENDER} />
         <text x="20" y={size - 18}>favours you</text>
         <circle cx="10" cy={size - 6} r="3.5" fill={BLUSH} />
@@ -248,10 +248,10 @@ function Handshake({ archetypes }: { archetypes: SampleArchetype[] }) {
             <path d={ribbon} fill="none" stroke={tone(a.winRate)} strokeOpacity="0.18" strokeWidth={Math.max(band - 3, 2)} />
             <path d={ribbon} fill="none" stroke={tone(a.winRate)} strokeOpacity="0.8" strokeWidth="1" strokeDasharray="2 10" className="ribbon-flow" style={{ animationDuration: `${6 + i}s` }} />
             <circle cx="226" cy={y1} r="3.5" fill={tone(a.winRate)} className="pulse-soft" />
-            <text x="238" y={y1 - 3} fontSize="12" fill="#f2eeea" letterSpacing="0.5">
+            <text x="238" y={y1 - 3} fontSize="15.6" fill="#f2eeea" letterSpacing="0.5">
               {a.name}
             </text>
-            <text x="238" y={y1 + 13} fontSize="10.5" fill={tone(a.winRate)} className="tabular-nums">
+            <text x="238" y={y1 + 13} fontSize="13.7" fill={tone(a.winRate)} className="tabular-nums">
               {pct(a.winRate)} · {a.games.toLocaleString("en")}
             </text>
           </g>
@@ -300,12 +300,12 @@ function GameLengthChart({ points }: { points: { label: string; winRate: number 
         </linearGradient>
       </defs>
       {phases.map((ph) => (
-        <text key={ph.label} x={(x(ph.from) + x(ph.to)) / 2} y={pad - 14} textAnchor="middle" fontSize="10" fill={INK_FAINT} letterSpacing="3">
+        <text key={ph.label} x={(x(ph.from) + x(ph.to)) / 2} y={pad - 14} textAnchor="middle" fontSize="13" fill={INK_FAINT} letterSpacing="3">
           {ph.label.toUpperCase()}
         </text>
       ))}
       <line x1={pad} x2={w - pad} y1={y(50)} y2={y(50)} stroke="rgb(184 179 202 / 0.2)" strokeDasharray="2 6" />
-      <text x={w - pad} y={y(50) - 6} textAnchor="end" fontSize="9.5" fill={INK_FAINT}>
+      <text x={w - pad} y={y(50) - 6} textAnchor="end" fontSize="12.3" fill={INK_FAINT}>
         50%
       </text>
       <path d={area} fill="url(#len-fill)" />
@@ -314,7 +314,7 @@ function GameLengthChart({ points }: { points: { label: string; winRate: number 
         <animateMotion dur="8s" repeatCount="indefinite" path={line} />
       </circle>
       {points.map((pt, i) => (
-        <text key={pt.label} x={x(i)} y={h - 8} textAnchor="middle" fontSize="10" fill={INK_FAINT}>
+        <text key={pt.label} x={x(i)} y={h - 8} textAnchor="middle" fontSize="13" fill={INK_FAINT}>
           {pt.label}
         </text>
       ))}
@@ -338,8 +338,8 @@ function LevelStrip({ levels }: { levels: { level: number; delta: number }[] }) 
             <div className="flex h-1/2 w-full items-start justify-center">
               {!up && <div className="grow-down w-1.5 rounded-full bg-gradient-to-b from-blush-400/10 to-blush-400 shadow-[0_0_10px_rgb(229_184_168/0.6)]" style={{ height: `${height}%`, animationDelay: `${i * 50}ms` }} />}
             </div>
-            <span className={`absolute -bottom-5 text-[0.62rem] tabular-nums ${[6, 11, 16].includes(l.level) ? "text-blush-300" : "text-ink-faint"}`}>{l.level}</span>
-            <span className="pointer-events-none absolute -top-6 rounded-full bg-night-800/90 px-2 py-0.5 text-[0.62rem] tabular-nums text-ink opacity-0 transition-opacity group-hover:opacity-100">
+            <span className={`absolute -bottom-5 text-[0.9rem] tabular-nums ${[6, 11, 16].includes(l.level) ? "text-blush-300" : "text-ink-faint"}`}>{l.level}</span>
+            <span className="pointer-events-none absolute -top-6 rounded-full bg-night-800/90 px-2 py-0.5 text-[0.9rem] tabular-nums text-ink opacity-0 transition-opacity group-hover:opacity-100">
               {up ? "+" : ""}
               {l.delta.toFixed(1)}
             </span>
@@ -388,8 +388,8 @@ function DamageProfile({ damage }: { damage: { magic: number; physical: number; 
         {parts.map((part) => (
           <li key={part.label} className="flex items-baseline gap-3">
             <span className="size-2 rounded-full" style={{ background: part.color, boxShadow: `0 0 8px ${part.color}` }} />
-            <span className="w-20 text-[0.68rem] uppercase tracking-[0.25em] text-ink-faint">{part.label}</span>
-            <span className="text-xl font-light tabular-nums text-ink">{pct(part.value, 0)}</span>
+            <span className="w-20 text-[0.8rem] uppercase tracking-[0.25em] text-ink-faint">{part.label}</span>
+            <span className="text-xl font-normal tabular-nums text-ink">{pct(part.value, 0)}</span>
           </li>
         ))}
       </ul>
@@ -416,8 +416,8 @@ function PhaseStrength({ phases }: { phases: { phase: string; winRate: number }[
                 }}
               />
             </div>
-            <p className="mt-3 text-[0.68rem] uppercase tracking-[0.3em] text-ink-faint">{ph.phase}</p>
-            <p className="text-xl font-light tabular-nums" style={{ color: tone(ph.winRate) }}>
+            <p className="mt-3 text-[0.8rem] uppercase tracking-[0.3em] text-ink-faint">{ph.phase}</p>
+            <p className="text-xl font-normal tabular-nums" style={{ color: tone(ph.winRate) }}>
               {pct(ph.winRate)}
             </p>
           </div>
@@ -443,13 +443,13 @@ function BuildQuest({ path }: { path: { step: string; winRate: number; games: nu
         <g key={node.step} transform={`translate(${xs[i]} ${ys[i]})`}>
           <circle r="9" fill="#1b1a16" stroke={tone(node.winRate)} />
           <circle r="3" fill={tone(node.winRate)} className="pulse-soft" />
-          <text y={i % 2 ? 34 : -42} textAnchor="middle" fontSize="9.5" fill={INK_FAINT} letterSpacing="2.5">
+          <text y={i % 2 ? 34 : -42} textAnchor="middle" fontSize="12.3" fill={INK_FAINT} letterSpacing="2.5">
             {`QUEST ${i + 1}`}
           </text>
-          <text y={i % 2 ? 50 : -26} textAnchor="middle" fontSize="12" fill="#f2eeea">
+          <text y={i % 2 ? 50 : -26} textAnchor="middle" fontSize="15.6" fill="#f2eeea">
             {node.step}
           </text>
-          <text y={i % 2 ? 66 : -10} textAnchor="middle" fontSize="11" fill={tone(node.winRate)} className="tabular-nums">
+          <text y={i % 2 ? 66 : -10} textAnchor="middle" fontSize="14.3" fill={tone(node.winRate)} className="tabular-nums">
             {pct(node.winRate)} · {node.games.toLocaleString("en")}
           </text>
         </g>

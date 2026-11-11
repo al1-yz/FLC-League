@@ -9,10 +9,10 @@ export function TopBar({ mid, bot, patch, issues }: { mid: FocusChampion[]; bot:
   return (
     <header className="topbar">
       <nav aria-label="Main" className="mx-auto grid max-w-7xl grid-cols-[1fr_auto_1fr] items-center px-6 py-3.5">
-        <Link href="/" className="justify-self-start text-xl font-light tracking-[0.35em] text-ink">
+        <Link href="/" className="justify-self-start text-xl font-normal tracking-[0.35em] text-ink">
           FLC
         </Link>
-        <ul className="flex items-center gap-1 text-[0.72rem] uppercase tracking-[0.18em]">
+        <ul className="flex items-center gap-1 text-[0.85rem] uppercase tracking-[0.18em]">
           <LaneMenu label="Mid lane" lane="mid" champions={mid} />
           <LaneMenu label="Bot lane" lane="bot" champions={bot} />
           <li>

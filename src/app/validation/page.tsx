@@ -13,14 +13,14 @@ export default function ValidationPage() {
     <div className="legible relative">
       <EtherealScene />
       <div className="mx-auto max-w-4xl px-10 pt-16 pb-24">
-        <p className="text-[0.72rem] uppercase tracking-[0.4em] text-ink-muted">Content repository · {contentDir()}</p>
-        <h1 className="mt-4 text-5xl font-extralight uppercase tracking-[0.2em] text-ink">Content report</h1>
+        <p className="text-[0.85rem] uppercase tracking-[0.4em] text-ink-muted">Content repository · {contentDir()}</p>
+        <h1 className="mt-4 text-5xl font-light uppercase tracking-[0.2em] text-ink">Content report</h1>
         <p className="mt-4 max-w-xl text-sm text-ink-muted">
           Entries that break a load rule are hidden from the app until they are fixed. Rules are described in the content format guide.
         </p>
 
         {report.issues.length === 0 ? (
-          <p className="mt-16 flex items-center gap-3 text-lg font-light text-lavender-200">
+          <p className="mt-16 flex items-center gap-3 text-lg font-normal text-lavender-200">
             <span className="size-2 rounded-full bg-lavender-300 shadow-[0_0_10px_rgb(184_179_202/0.9)]" aria-hidden="true" />
             All content is valid.
           </p>
