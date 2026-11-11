@@ -527,9 +527,150 @@ a:hover > .rail-node {
   color: var(--color-ink);
 }
 
+/* ---------- Ethereal split scene (D17.2) ---------- */
+
+.ethereal {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.ethereal__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  filter: saturate(0.75) brightness(0.85);
+  animation: art-in 2.6s var(--ease-luxe) 0.1s forwards, ken-burns 70s ease-in-out infinite alternate;
+}
+.ethereal__fallback {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(60% 70% at 78% 30%, rgb(211 207 224 / 0.35), transparent 70%),
+    radial-gradient(50% 60% at 70% 80%, rgb(229 184 168 / 0.18), transparent 70%),
+    linear-gradient(180deg, #4a4650 0%, #2d2b2a 55%, #131210 100%);
+}
+/* Clear on the right, dissolving into blur on the left. */
+.ethereal__blur {
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(22px) saturate(0.85);
+  -webkit-mask-image: linear-gradient(90deg, black 0%, black 30%, transparent 68%);
+  mask-image: linear-gradient(90deg, black 0%, black 30%, transparent 68%);
+}
+.ethereal__mist {
+  position: absolute;
+  left: -25%;
+  width: 150%;
+  height: 45%;
+  border-radius: 50%;
+  filter: blur(50px);
+  background: radial-gradient(ellipse at center, rgb(226 222 236 / 0.22), transparent 70%);
+}
+.ethereal__mist--a {
+  top: 18%;
+  animation: mist 40s ease-in-out infinite alternate;
+}
+.ethereal__mist--b {
+  top: 55%;
+  opacity: 0.8;
+  animation: mist 56s ease-in-out infinite alternate-reverse;
+}
+.ethereal__veil {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgb(19 18 16 / 0.55) 0%, rgb(19 18 16 / 0.15) 50%, transparent 75%),
+    linear-gradient(180deg, transparent 55%, rgb(19 18 16 / 0.85) 100%);
+}
+@keyframes mist {
+  from { transform: translateX(-6%); }
+  to { transform: translateX(6%); }
+}
+
+/* ---------- Flow ---------- */
+
+.float {
+  animation: float 9s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.orbit {
+  transform-origin: 60px 60px;
+  animation: orbit 30s linear infinite;
+}
+@keyframes orbit {
+  to { transform: rotate(360deg); }
+}
+.breathe-ring {
+  transform-origin: 60px 60px;
+  animation: breathe-ring 6s ease-in-out infinite;
+}
+@keyframes breathe-ring {
+  0%, 100% { transform: scale(0.96); opacity: 0.4; }
+  50% { transform: scale(1.06); opacity: 1; }
+}
+
+.drift {
+  opacity: 0;
+  transform: translateY(18px);
+  filter: blur(6px);
+  transition: opacity 1.2s var(--ease-luxe), transform 1.2s var(--ease-luxe), filter 1.2s var(--ease-luxe);
+}
+.drift--in {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+.river {
+  position: absolute;
+  left: 50%;
+  top: 7rem;
+  bottom: 2rem;
+  width: 8rem;
+  height: calc(100% - 9rem);
+  transform: translateX(-50%);
+  overflow: visible;
+}
+.river path {
+  fill: none;
+  stroke: rgb(229 184 168 / 0.35);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 1 6;
+  animation: river 40s linear infinite;
+}
+@keyframes river {
+  to { stroke-dashoffset: -400; }
+}
+.river__node {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--color-blush-400);
+  box-shadow: 0 0 10px rgb(229 184 168 / 0.9);
+  transform: translateY(-0.1rem);
+}
+@media (max-width: 767px) {
+  .river { display: none; }
+}
+
+/* Keeps text readable where it floats over the clear side of an image. */
+.legible {
+  text-shadow: 0 1px 2px rgb(19 18 16 / 0.9), 0 0 18px rgb(19 18 16 / 0.85);
+}
+
 /* ---------- Accessibility ---------- */
 
 @media (prefers-reduced-motion: reduce) {
+  .drift { opacity: 1; transform: none; filter: none; }
   *,
   *::before,
   *::after {

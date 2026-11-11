@@ -2,15 +2,15 @@ import Link from "next/link";
 import type { FocusChampion } from "@/content";
 
 /**
- * Floating top bar (replaces the sidebar, D16.2). Lanes open a small menu of their Focus Champions.
+ * Floating top bar (D16.2, D17.1): wordmark left, navigation centred, Patch right.
+ * Lanes open a small menu of their Focus Champions.
  */
 export function TopBar({ mid, bot, patch }: { mid: FocusChampion[]; bot: FocusChampion[]; patch: string }) {
   return (
     <header className="topbar">
-      <nav aria-label="Main" className="mx-auto flex max-w-7xl items-center gap-8 px-6 py-3.5">
-        <Link href="/" className="flex items-baseline gap-2">
-          <span className="text-xl font-light tracking-[0.35em] text-ink">FLC</span>
-          <span className="hidden text-[0.62rem] uppercase tracking-[0.2em] text-ink-faint md:inline">Full Lane Control</span>
+      <nav aria-label="Main" className="mx-auto grid max-w-7xl grid-cols-[1fr_auto_1fr] items-center px-6 py-3.5">
+        <Link href="/" className="justify-self-start text-xl font-light tracking-[0.35em] text-ink">
+          FLC
         </Link>
         <ul className="flex items-center gap-1 text-[0.72rem] uppercase tracking-[0.18em]">
           <LaneMenu label="Mid lane" lane="mid" champions={mid} />
@@ -21,7 +21,7 @@ export function TopBar({ mid, bot, patch }: { mid: FocusChampion[]; bot: FocusCh
             </span>
           </li>
         </ul>
-        <span className="ml-auto chip">Patch {patch}</span>
+        <span className="chip justify-self-end">Patch {patch}</span>
       </nav>
     </header>
   );
