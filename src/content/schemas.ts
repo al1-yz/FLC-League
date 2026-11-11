@@ -48,3 +48,11 @@ export const focusChampionsFile = z.object({
   mid: z.array(z.string()).default([]),
   bot: z.array(z.string()).default([]),
 });
+
+export const archetypesFile = z.array(z.object({ id: z.string(), name: z.string() }));
+
+export const championFile = z.object({
+  primaryArchetype: z.string().optional(),
+  secondaryArchetype: z.string().optional(),
+  species: z.string().optional(),
+});

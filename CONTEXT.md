@@ -1,4 +1,4 @@
-# LoLMechs
+# FLC (Full Lane Control)
 
 A personal study tool for League of Legends lane matchups. It explains what happens in a matchup, why, and how to respond, combining statistics with credited coaching knowledge.
 

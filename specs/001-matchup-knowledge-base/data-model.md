@@ -16,7 +16,7 @@ Phase 1 of `/speckit-plan`. Terms are defined in `CONTEXT.md`, and invariants `I
 |---|---|---|
 | **Catalog** | currentPatch, refreshedAt, champions{id, name, iconPath}, items{id, name}, runes{id, name} | currentPatch = latest catalog version (FR-002) |
 | **Archetype** | id, name | from `config/archetypes.yaml` |
-| **ChampionProfile** | championId, primaryArchetype?, secondaryArchetype?, insights[] (champion-level) | archetypes from the approved list; secondary ≠ primary (I16); unclassified allowed (FR-003) |
+| **ChampionProfile** | championId, primaryArchetype?, secondaryArchetype?, species? (lore, from a Source; not in Riot game data), insights[] (champion-level) | archetypes from the approved list; secondary ≠ primary (I16); unclassified allowed (FR-003) |
 | **FocusChampion** | championId, lane | from `config/focus-champions.yaml` (FR-004) |
 | **Source** | id, name, kind (`official`, `third-party-statistic`, `coaching`, `me`), homeLink, medium (`video`, `article`, `podcast`, `data`, `other`) | `me` is built in and can't be redefined |
 | **Insight** | id, subject (see below), sourceId, claim, quote?, link, locator?, patch?, noted, collectedBy (`claude`, `user`), reviewStatus (derived) | I1, I2, I3; locator required when the Source medium is `video`; quote ≤ 200 characters, one sentence |

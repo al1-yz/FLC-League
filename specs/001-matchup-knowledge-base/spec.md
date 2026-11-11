@@ -222,7 +222,7 @@ In a Matchup's Statistics section, the user sees hand-recorded Third-party Refer
 
 - **FR-014**: A Matchup MUST be identified by its two champions and Lane, regardless of order, and at least one champion MUST be a Focus Champion of that Lane (I4, I5).
 - **FR-015**: Every Matchup page MUST show the fixed template of single-topic Sections (no compound Sections, D13.1), in groups and in this order: **Overview** (Overview; Difficulty; Win conditions; Support influence, Bot only), **Game timeline** (Power spikes; Early game; Mid game; Late game), **Trading** (Trading patterns; Trading stance; Cooldown windows), **Windows** (All-in windows; Kill windows; Defensive windows), **Build** (Runes; Summoner spells; Itemization), **Statistics**. Mid has 17 Sections, Bot 18. General Concepts (tethering, wave management, lane priority, roaming, map pressure…) are NOT Matchup Sections; they live only on General Concept pages (D15.1).
-- **FR-015a**: The Matchup page MUST use the Focus Champion's splash art (skin chosen per champion in the Content Repository's configuration, from the Catalog) as its background when available, show the two champions as panels around a central matchup element, and present the Sections (except Statistics) as a numbered, connected step-by-step game plan with a step rail (D13.2, D15.3).
+- **FR-015a**: The Matchup page MUST use the Focus Champion's splash art (skin chosen per champion in the Content Repository's configuration, from the Catalog) as its background when available, and present the Matchup as an architectural analysis sheet: a title block of key specs, a game-phase diagram, detail callouts (Trading, Windows, Build), a lane section by level, and the coach notes as numbered annotations (D13.2, D16.4).
 - **FR-016**: The Power spikes section MUST organize Insights by level (1–18) and by item, not as one undivided list.
 - **FR-017**: A Matchup page MUST be shown from the perspective of the Focus Champion it was opened from. When both champions are Focus Champions, the user MUST be able to switch perspective.
 - **FR-018**: Each section with no Insights MUST show a gap marker.
@@ -245,7 +245,7 @@ In a Matchup's Statistics section, the user sees hand-recorded Third-party Refer
 
 **Navigation and pages**
 
-- **FR-028**: A persistent sidebar MUST provide Lane → Focus Champion → Matchups, plus Archetypes, Opponents and General Concepts.
+- **FR-028**: A persistent top bar MUST provide Lane → Focus Champion (as menus), plus Archetypes, Opponents and General Concepts (D16.2). A landing page introduces FLC and lists the Focus Champions per Lane.
 - **FR-029**: A Focus Champion page MUST show its Matchups as a sortable table (default view) and as a radial graph, switchable by the user, as described in US4.
 - **FR-030**: The radial graph MUST color Opponents by one difficulty signal at a time (Verdict by default, switchable to statistical); it MUST NOT combine the two (I10).
 - **FR-031**: Users MUST be able to open a Matchup against any catalog champion from a Focus Champion page, even with no existing content.
