@@ -27,6 +27,7 @@ test("user studies a Matchup as an analysis sheet with credited coach notes", as
 
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Orianna vs Syndra");
   expect(await page.getByRole("heading", { level: 2 }).allTextContents()).toEqual([
+    "Your verdict",
     "Analysis of the game plan",
     "Details",
     "Lane section · levels 1–18",

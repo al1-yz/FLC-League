@@ -2,6 +2,8 @@ import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join, basename } from "node:path";
 import { parse } from "yaml";
 import type { z } from "zod";
+import { readList } from "../user-data/files";
+import type { MeNoteRecord, VerdictRecord } from "../user-data";
 import { SECTION_GROUPS, sectionsFor, type ChampionId, type Lane, type MatchupKey } from "./domain";
 import {
   RANK_FILTERS,
@@ -39,6 +41,8 @@ export type MatchupView = {
   champions: [ChampionView, ChampionView];
   /** The other champion, when both are Focus Champions of this Lane (FR-017). */
   switchTo?: ChampionId;
+  /** The user's latest Verdict and earlier ones, newest first (FR-022a). */
+  verdict?: { latest: Verdict; history: Verdict[] };
   groups: { id: string; title: string; sections: SectionView[] }[];
 };
 
@@ -51,7 +55,11 @@ export type SectionView = {
   conflicts: [string, string][];
   /** Power spikes only: Insights grouped by level, then item, then the rest (FR-016). */
   spikeGroups?: { label: string; insights: InsightView[] }[];
+  /** The user's own notes on this Section (FR-023). */
+  meNotes: { id: string; text: string; createdAt: string; updatedAt: string }[];
 };
+
+export type Verdict = Omit<VerdictRecord, "matchup">;
 
 export type ChampionView = { id: ChampionId; name: string; icon?: string; splash?: string; skin?: string };
 
@@ -255,6 +263,9 @@ export function loadKnowledgeBase(contentDir: string): { kb: KnowledgeBase; repo
     }
   }
 
+  const verdicts = readList<VerdictRecord>(contentDir, "verdicts.yaml");
+  const meNotes = readList<MeNoteRecord>(contentDir, "notes.yaml");
+
   const kb: KnowledgeBase = {
     currentPatch: () => catalog.currentPatch,
     champion,
@@ -304,6 +315,13 @@ export function loadKnowledgeBase(contentDir: string): { kb: KnowledgeBase; repo
         perspective,
         champions: [champion(perspective), champion(opponent)],
         ...(bothFocus && { switchTo: opponent }),
+        ...(() => {
+          const mine = verdicts
+            .filter((v) => v.matchup === key)
+            .map(({ matchup: _, ...v }) => v)
+            .sort((a, b) => comparePatch(b.patch, a.patch));
+          return mine.length ? { verdict: { latest: mine[0], history: mine.slice(1) } } : {};
+        })(),
         groups: SECTION_GROUPS.map((g) => ({
           id: g.id,
           title: g.title,
@@ -317,6 +335,9 @@ export function loadKnowledgeBase(contentDir: string): { kb: KnowledgeBase; repo
                 title: s.title,
                 insights,
                 conflicts: m.conflicts.filter((c) => ids.has(c.insights[0])).map((c) => c.insights),
+                meNotes: meNotes
+                  .filter((n) => "matchup" in n.target && n.target.matchup === key && n.target.section === s.id)
+                  .map(({ id, text, createdAt, updatedAt }) => ({ id, text, createdAt, updatedAt })),
               };
               if (s.id === "power-spikes") {
                 const byLevel = new Map<number, InsightView[]>();
