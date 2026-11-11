@@ -3,8 +3,8 @@
 import { useEffect, useRef } from "react";
 
 /**
- * A field of particles rolling in slow waves, coloured from antique gold (early game)
- * to violet (late game). Static frame when the user prefers reduced motion.
+ * A field of particles rolling in slow waves, coloured from blush (early game)
+ * to lavender (late game). Static frame when the user prefers reduced motion.
  */
 export function ParticleWave({ className = "" }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -28,9 +28,9 @@ export function ParticleWave({ className = "" }: { className?: string }) {
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
     };
 
-    const gold = [185, 163, 139];
-    const violet = [155, 123, 208];
-    const mix = (t: number) => gold.map((g, i) => Math.round(g + (violet[i] - g) * t));
+    const warm = [229, 184, 168];
+    const cool = [184, 179, 202];
+    const mix = (t: number) => warm.map((w, i) => Math.round(w + (cool[i] - w) * t));
 
     const draw = (time: number) => {
       const t = time / 1000;

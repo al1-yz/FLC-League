@@ -15,7 +15,6 @@ describe("Matchup view", () => {
       ["trading", ["trading-patterns", "trading-stance", "cooldown-windows"]],
       ["windows", ["all-in-windows", "kill-windows", "defensive-windows"]],
       ["build", ["runes", "summoner-spells", "itemization"]],
-      ["general-concepts", ["tethering", "wave-management", "lane-priority", "roaming", "map-pressure"]],
       ["statistics", ["statistics"]],
     ]);
     const trading = view.groups.flatMap((g) => g.sections).find((s) => s.id === "trading-patterns");
@@ -33,13 +32,22 @@ describe("Matchup view", () => {
   });
 });
 
-it("gives a Bot Matchup Support influence instead of Roaming and Map pressure", () => {
+it("gives a Bot Matchup Support influence, which Mid does not have", () => {
   const { kb } = loadKnowledgeBase(baseline);
 
   const ids = kb.matchup("bot/ezreal--kaisa", "ezreal").groups.flatMap((g) => g.sections.map((s) => s.id));
 
   expect(ids).toContain("support-influence");
-  expect(ids).not.toContain("roaming");
-  expect(ids).not.toContain("map-pressure");
-  expect(ids).toHaveLength(21);
+  expect(ids).toHaveLength(18);
+});
+
+it("keeps General Concepts out of the Matchup template (they have their own pages)", () => {
+  const { kb } = loadKnowledgeBase(baseline);
+
+  const ids = kb.matchup("mid/orianna--syndra", "orianna").groups.flatMap((g) => g.sections.map((s) => s.id));
+
+  expect(ids).toHaveLength(17);
+  for (const concept of ["tethering", "wave-management", "lane-priority", "roaming", "map-pressure"]) {
+    expect(ids).not.toContain(concept);
+  }
 });

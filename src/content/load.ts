@@ -25,6 +25,7 @@ export type ChampionView = { id: ChampionId; name: string; icon?: string; splash
 export type FocusChampion = { id: ChampionId; name: string; lane: Lane };
 
 export type KnowledgeBase = {
+  champion(id: ChampionId): ChampionView;
   focusChampions(lane: Lane): FocusChampion[];
   matchup(key: MatchupKey, perspective: ChampionId): MatchupView;
 };
@@ -72,6 +73,7 @@ export function loadKnowledgeBase(contentDir: string): { kb: KnowledgeBase; repo
   }
 
   const kb: KnowledgeBase = {
+    champion,
     focusChampions(lane) {
       return focus[lane].map((id) => ({ id, name: championName(id), lane }));
     },

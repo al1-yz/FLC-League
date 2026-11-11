@@ -8,7 +8,7 @@ Phase 1 of `/speckit-plan`. Terms are defined in `CONTEXT.md`, and invariants `I
 - **Patch**: `"<major>.<minor>"` string (e.g. `"16.22"`), compared numerically per part.
 - **MatchupKey**: `<lane>/<a>--<b>`, where `a < b` alphabetically, so it's the same key in either order (I5). Example: `mid/orianna--syndra`.
 - **InsightId**: globally unique string, chosen by the writer (e.g. `mid-orianna-syndra-0007`).
-- **SectionId**: one of `overview, difficulty, win-conditions, support-influence, power-spikes, early-game, mid-game, late-game, trading-patterns, trading-stance, cooldown-windows, all-in-windows, kill-windows, defensive-windows, runes, summoner-spells, itemization, tethering, wave-management, lane-priority, roaming, map-pressure, statistics` (D13.1), grouped as in FR-015.
+- **SectionId**: one of `overview, difficulty, win-conditions, support-influence, power-spikes, early-game, mid-game, late-game, trading-patterns, trading-stance, cooldown-windows, all-in-windows, kill-windows, defensive-windows, runes, summoner-spells, itemization, statistics` (D13.1, D15.1), grouped as in FR-015.
 
 ## Entities
 

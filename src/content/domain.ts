@@ -3,20 +3,23 @@ export type ChampionId = string;
 /** `<lane>/<a>--<b>` with a < b alphabetically, so both orders give the same key. */
 export type MatchupKey = string;
 
-/** Groups of Sections on a Matchup page, in display order (D13.1). */
+/** Groups of Sections on a Matchup page, in display order (D13.1, D15.1). */
 export const SECTION_GROUPS = [
   { id: "overview", title: "Overview" },
   { id: "timeline", title: "Game timeline" },
   { id: "trading", title: "Trading" },
   { id: "windows", title: "Windows" },
   { id: "build", title: "Build" },
-  { id: "general-concepts", title: "General Concepts" },
   { id: "statistics", title: "Statistics" },
 ] as const;
 
 export type SectionGroupId = (typeof SECTION_GROUPS)[number]["id"];
 
-/** The fixed Matchup template, in display order. One topic per Section, no compound Sections (D13.1). */
+/**
+ * The fixed Matchup template, in display order. One topic per Section, no compound Sections (D13.1).
+ * General Concepts (tethering, wave management, lane priority, roaming, map pressure…) are not
+ * Matchup Sections: they live on their own General Concept pages (D15.1).
+ */
 export const SECTIONS = [
   { id: "overview", title: "Overview", group: "overview" },
   { id: "difficulty", title: "Difficulty", group: "overview" },
@@ -35,11 +38,6 @@ export const SECTIONS = [
   { id: "runes", title: "Runes", group: "build" },
   { id: "summoner-spells", title: "Summoner spells", group: "build" },
   { id: "itemization", title: "Itemization", group: "build" },
-  { id: "tethering", title: "Tethering", group: "general-concepts" },
-  { id: "wave-management", title: "Wave management", group: "general-concepts" },
-  { id: "lane-priority", title: "Lane priority", group: "general-concepts" },
-  { id: "roaming", title: "Roaming", group: "general-concepts", lane: "mid" },
-  { id: "map-pressure", title: "Map pressure", group: "general-concepts", lane: "mid" },
   { id: "statistics", title: "Statistics", group: "statistics" },
 ] as const satisfies readonly { id: string; title: string; group: SectionGroupId; lane?: Lane }[];
 
