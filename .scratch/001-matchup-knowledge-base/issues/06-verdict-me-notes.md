@@ -4,12 +4,16 @@
 
 **Blocked by:** #01
 
-**Status:** ready-for-agent
+**Status:** done (awaiting user review)
 
-- [ ] Verdict saved with current Patch and date and survives restart
-- [ ] Same-Patch edit replaces; newer-Patch Verdict keeps the older one in history
-- [ ] Latest Verdict shown prominently with history list
-- [ ] Me notes credited to "Me" and visually distinct from external Insights
-- [ ] Writes never touch Claude-collected files; writes are atomic
-- [ ] Verdict and statistical difficulty are never combined
-- [ ] End-to-end test "record a Verdict" passes
+- [x] Verdict saved with current Patch and date and survives restart
+- [x] Same-Patch edit replaces; newer-Patch Verdict keeps the older one in history
+- [x] Latest Verdict shown prominently with history list
+- [x] Me notes credited to "Me" and visually distinct from external Insights
+- [x] Writes never touch Claude-collected files; writes are atomic
+- [x] Verdict and statistical difficulty are never combined
+- [x] End-to-end test "record a Verdict" passes
+
+## Comments
+
+- 2026-11-11 (Claude): UserData module (`recordVerdict`, `saveMeNote`, `deleteMeNote`) writes atomically to `me/verdicts.yaml` and `me/notes.yaml` only, and is tested through its interface in temporary copies of the fixture (same-Patch replace, history on a newer Patch, 1–5 guard, ownership). The Matchup page has a Verdict panel (difficulty dots, confidence, notes, history) and per-Section Me notes via server actions. A browser test records both and checks they survive a reload. Me notes on General Concepts come with ticket 10.

@@ -4,6 +4,8 @@ import { loadKnowledgeBase } from "@/content";
 import { contentDir } from "@/content/config";
 import { DetailCircle, LaneSection, PhaseStack } from "@/ui/Blueprint";
 import { EtherealScene } from "@/ui/EtherealScene";
+import { VerdictPanel } from "@/ui/VerdictPanel";
+import { deleteMeNoteAction, recordVerdictAction, saveMeNoteAction } from "./actions";
 import { Reveal } from "@/ui/Reveal";
 
 export const dynamic = "force-dynamic";
@@ -68,10 +70,14 @@ export default async function MatchupPage({
           <Spec label="Archetype" value={opponentProfile.primaryArchetype ?? "—"} />
           <Spec label="Coach notes" value={String(insights.length)} />
           <Spec label="Sections covered" value={`${sections.filter((s) => s.insights.length).length} / ${sections.length}`} />
-          <Spec label="Your verdict" value="—" />
+          <Spec label="Your verdict" value={view.verdict ? `${view.verdict.latest.difficulty} / 5` : "—"} />
           <Spec label="Statistics" value="feature 002" />
         </dl>
       </header>
+
+      <section className="mx-auto max-w-7xl px-10 pb-14">
+        <VerdictPanel matchup={view.key} verdict={view.verdict} action={recordVerdictAction} />
+      </section>
 
       {/* Analysis sheet */}
       <section aria-labelledby="analysis-title" className="mx-auto max-w-7xl px-10">
@@ -117,7 +123,7 @@ export default async function MatchupPage({
           {notes.flatMap((g) => g.sections).map((section, i) => (
             <li key={section.id} className={`md:w-[46%] ${i % 2 ? "md:ml-auto" : ""}`}>
               <Reveal delay={60}>
-                <Annotation index={i + 1} section={section} opponent={opponent.name} />
+                <Annotation index={i + 1} section={section} opponent={opponent.name} matchup={view.key} />
               </Reveal>
             </li>
           ))}
@@ -151,7 +157,7 @@ function Spec({ label, value }: { label: string; value: string }) {
   );
 }
 
-function Annotation({ index, section, opponent }: { index: number; section: SectionView; opponent: string }) {
+function Annotation({ index, section, opponent, matchup }: { index: number; section: SectionView; opponent: string; matchup: string }) {
   const inConflict = new Set(section.conflicts.flat());
   const byId = new Map(section.insights.map((i) => [i.id, i]));
   const plain = section.insights.filter((i) => !inConflict.has(i.id));
@@ -162,7 +168,7 @@ function Annotation({ index, section, opponent }: { index: number; section: Sect
         <span className="text-sm font-normal tabular-nums text-blush-400">{String(index).padStart(2, "0")}</span>
         <span className="text-[0.9rem] uppercase tracking-[0.3em] text-ink">{section.title}</span>
       </h3>
-      {section.insights.length === 0 && <p className="mt-4 text-sm italic text-ink-faint">Awaiting coach notes.</p>}
+      {section.insights.length === 0 && section.meNotes.length === 0 && <p className="mt-4 text-sm italic text-ink-faint">Awaiting coach notes.</p>}
 
       {section.spikeGroups ? (
         <div className="mt-4 space-y-6">
@@ -199,7 +205,38 @@ function Annotation({ index, section, opponent }: { index: number; section: Sect
           </ul>
         </div>
       ))}
+      <MeNotes section={section} matchup={matchup} />
     </section>
+  );
+}
+
+function MeNotes({ section, matchup }: { section: SectionView; matchup: string }) {
+  return (
+    <div className="mt-5 pl-9">
+      {section.meNotes.length > 0 && (
+        <ul aria-label={`Your notes on ${section.title}`} className="space-y-3">
+          {section.meNotes.map((note) => (
+            <li key={note.id} className="me-note">
+              <p className="text-ink">{note.text}</p>
+              <form action={deleteMeNoteAction} className="mt-1 flex items-center gap-3 text-[0.82rem] uppercase tracking-[0.18em] text-lavender-300">
+                <span>Me · {note.updatedAt}</span>
+                <input type="hidden" name="id" value={note.id} />
+                <button type="submit" className="text-ink-faint hover:text-blush-300">Delete</button>
+              </form>
+            </li>
+          ))}
+        </ul>
+      )}
+      <details className="mt-2 text-sm">
+        <summary className="cursor-pointer text-ink-faint hover:text-lavender-200">+ Add your note</summary>
+        <form action={saveMeNoteAction} className="mt-2 flex gap-2">
+          <input type="hidden" name="matchup" value={matchup} />
+          <input type="hidden" name="section" value={section.id} />
+          <input name="text" required aria-label={`Your note on ${section.title}`} placeholder="What did you notice?" className="field flex-1" />
+          <button type="submit" className="glass-pill">Save</button>
+        </form>
+      </details>
+    </div>
   );
 }
 
