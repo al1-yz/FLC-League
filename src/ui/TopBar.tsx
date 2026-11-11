@@ -16,6 +16,11 @@ export function TopBar({ mid, bot, patch, issues }: { mid: FocusChampion[]; bot:
           <LaneMenu label="Mid lane" lane="mid" champions={mid} />
           <LaneMenu label="Bot lane" lane="bot" champions={bot} />
           <li>
+            <Link href="/archetypes" className="topbar__item">
+              Archetypes
+            </Link>
+          </li>
+          <li>
             <span className="topbar__item cursor-default text-ink-faint" title="Coming with ticket 10">
               General Concepts
             </span>

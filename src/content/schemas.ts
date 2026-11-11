@@ -99,3 +99,9 @@ export const thirdPartyReference = z.object({
 });
 
 export const conflictEntry = z.object({ id: z.string(), insights: z.tuple([z.string(), z.string()]) });
+
+export const looseArchetypeMatchupFile = z.object({
+  lane: z.string(),
+  archetypes: z.tuple([z.string(), z.string()]),
+  insights: z.array(z.record(z.string(), z.unknown())).default([]),
+});
