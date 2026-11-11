@@ -185,7 +185,7 @@ In a Matchup's Statistics section, the user sees hand-recorded Third-party Refer
 - **New Patch**: after a catalog refresh, all Matchup and champion Insights from earlier Patches show "possibly outdated". General Concept Insights are unaffected.
 - **Two Focus Champions meet** (Akali vs Zed): one Matchup, stored once, listed on both pages, each showing its own perspective.
 - **Bot Matchup with a non-marksman** (Ziggs vs Ezreal): valid; Ziggs keeps his own Archetype (I19).
-- **Lane-conditional sections**: "Roaming & map pressure" only appears in Mid; "Support influence" only in Bot. Content placing an Insight in the wrong lane's section is reported as invalid (I6).
+- **Lane-conditional sections**: "Roaming" and "Map pressure" only appear in Mid; "Support influence" only in Bot. Content placing an Insight in the wrong lane's section is reported as invalid (I6).
 - **Conflict across Patches**: two conflicting Insights from different Patches are still shown side by side, each with its own Patch and outdated marker.
 - **Rejecting an Insight that is part of a Conflict**: the Insight is deleted and the Conflict is removed with it; the remaining Insight is shown normally.
 - **Champion with no Primary Archetype**: excluded from Archetype Matchup champion lists and shown as "not classified".
