@@ -4,7 +4,7 @@ import { EtherealScene } from "@/ui/EtherealScene";
 
 export const dynamic = "force-dynamic";
 
-/** Landing photo: drop a landscape image at public/landing/fjord.jpg (see docs/design/README). */
+/** Landing photo: drop a landscape image at public/landing/fjord.jpg (source and licence in public/landing/README.md). */
 const LANDING_IMAGE = "/landing/fjord.jpg";
 
 export default function Landing() {
