@@ -1,49 +1,33 @@
-import Link from "next/link";
-import { loadKnowledgeBase, type Lane } from "@/content";
-import { contentDir } from "@/content/config";
-import { FjordScene } from "@/ui/FjordScene";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
+import { EtherealScene } from "@/ui/EtherealScene";
 
 export const dynamic = "force-dynamic";
 
-const LANES: { id: Lane; name: string; line: string }[] = [
-  { id: "mid", name: "Mid lane", line: "Tempo, priority and the art of the all-in." },
-  { id: "bot", name: "Bot lane", line: "Spacing, spikes and the long game." },
-];
+/** Landing photo: drop a landscape image at public/landing/fjord.jpg (see docs/design/README). */
+const LANDING_IMAGE = "/landing/fjord.jpg";
 
 export default function Landing() {
-  const { kb } = loadKnowledgeBase(contentDir());
+  const image = existsSync(join(process.cwd(), "public", LANDING_IMAGE)) ? LANDING_IMAGE : undefined;
 
   return (
     <div className="relative -mt-[4.5rem] min-h-screen overflow-hidden">
-      <FjordScene />
+      <EtherealScene image={image} snow />
 
-      <section className="relative mx-auto flex min-h-screen max-w-7xl flex-col justify-between px-10 pt-36 pb-16">
+      <section className="relative mx-auto flex min-h-screen max-w-7xl flex-col justify-between px-10 pt-40 pb-20">
         <div className="reveal">
-          <h1 className="text-[clamp(5rem,16vw,13rem)] font-extralight leading-none tracking-[0.18em] text-ink/90">FLC</h1>
-          <p className="mt-4 text-sm tracking-[0.3em] text-ink-muted uppercase">Focus · Learn · Climb</p>
-          <p className="mt-1 text-sm font-light text-ink-faint">Full Lane Control — a personal study of lane matchups</p>
+          <h1 className="text-[clamp(5rem,15vw,12rem)] font-extralight leading-none tracking-[0.2em] text-ink/90">FLC</h1>
+          <p className="mt-5 text-sm uppercase tracking-[0.42em] text-ink-muted">Focus · Learn · Climb</p>
         </div>
 
-        <ol className="mt-24 grid gap-10 md:grid-cols-2">
-          {LANES.map((lane, i) => (
-            <li key={lane.id} className="reveal max-w-sm" style={{ "--i": i + 3 } as React.CSSProperties}>
-              <p className="flex items-baseline gap-4">
-                <span className="text-2xl font-extralight text-blush-400">{String(i + 1).padStart(2, "0")}</span>
-                <span className="text-2xl font-light uppercase tracking-[0.12em] text-ink">{lane.name}</span>
-              </p>
-              <p className="mt-2 pl-12 text-sm text-ink-muted">{lane.line}</p>
-              <ul className="mt-4 flex flex-wrap gap-2 pl-12">
-                {kb.focusChampions(lane.id).map((c) => (
-                  <li key={c.id}>
-                    <Link href={`/${lane.id}/${c.id}`} className="glass-pill">
-                      {c.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </li>
-          ))}
-        </ol>
+        <div className="reveal max-w-md" style={{ "--i": 4 } as React.CSSProperties}>
+          <p className="text-2xl font-light tracking-wide text-ink">Full Lane Control</p>
+          <p className="mt-2 text-sm text-ink-muted">A personal study of lane matchups.</p>
+          <p className="mt-5 text-sm leading-relaxed text-ink-faint">
+            What happens in a lane, why it happens, and how to answer it — gathered from the coaches who
+            said it, measured against the games that prove it, and judged by you after every match.
+          </p>
+        </div>
       </section>
     </div>
   );

@@ -1,12 +1,15 @@
 import { expect, test } from "@playwright/test";
 
-test("landing introduces FLC and leads to a Focus Champion", async ({ page }) => {
+test("landing introduces FLC and the top bar leads to a Focus Champion", async ({ page }) => {
   await page.goto("/");
 
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("FLC");
   await expect(page.getByText("Focus · Learn · Climb")).toBeVisible();
+  await expect(page.getByText("Full Lane Control")).toBeVisible();
 
-  await page.getByRole("main").getByRole("link", { name: "Orianna" }).click();
+  const nav = page.getByRole("navigation", { name: "Main" });
+  await nav.getByText("Mid lane").hover();
+  await nav.getByRole("link", { name: "Orianna" }).click();
   await expect(page).toHaveURL(/\/mid\/orianna$/);
 });
 

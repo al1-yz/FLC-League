@@ -4,6 +4,7 @@ import { loadKnowledgeBase } from "@/content";
 import { contentDir } from "@/content/config";
 import { DetailCircle, LaneSection, PhaseStack } from "@/ui/Blueprint";
 import { ChampionBackdrop } from "@/ui/ChampionBackdrop";
+import { Reveal } from "@/ui/Reveal";
 
 export const dynamic = "force-dynamic";
 
@@ -46,7 +47,7 @@ export default async function MatchupPage({
       <ChampionBackdrop splash={you.splash} label={you.skin} />
 
       {/* Title block */}
-      <header className="mx-auto max-w-7xl px-10 pt-16 pb-10">
+      <header className="legible mx-auto max-w-7xl px-10 pt-16 pb-10">
         <p className="reveal text-[0.72rem] uppercase tracking-[0.4em] text-ink-muted">
           {view.lane === "mid" ? "Mid lane" : "Bot lane"} · Matchup analysis · Patch {kb.currentPatch()}
         </p>
@@ -67,7 +68,7 @@ export default async function MatchupPage({
 
       {/* Analysis sheet */}
       <section aria-labelledby="analysis-title" className="mx-auto max-w-7xl px-10">
-        <div className="sheet reveal" style={{ "--i": 3 } as React.CSSProperties}>
+        <div className="reveal" style={{ "--i": 3 } as React.CSSProperties}>
           <div className="grid gap-12 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
             <div>
               <h2 id="analysis-title" className="sheet__title">Analysis of the game plan</h2>
@@ -80,7 +81,7 @@ export default async function MatchupPage({
                 ]}
               />
             </div>
-            <div className="flex flex-col justify-center gap-10">
+            <div className="legible flex flex-col justify-center gap-10">
               <h2 className="sheet__title">Details</h2>
               <DetailCircle id="trading-patterns" label="Trading" motif="trade" sections={pick("trading-patterns", "trading-stance", "cooldown-windows")} />
               <DetailCircle id="all-in-windows" label="Windows" motif="window" sections={pick("all-in-windows", "kill-windows", "defensive-windows")} />
@@ -95,19 +96,26 @@ export default async function MatchupPage({
         </div>
       </section>
 
-      {/* Coach notes as numbered annotations */}
-      <section aria-labelledby="notes-title" className="mx-auto max-w-7xl px-10 py-20">
-        <h2 id="notes-title" className="sheet__title">Coach notes</h2>
-        <div className="mt-8 grid gap-x-16 gap-y-14 md:grid-cols-2">
+      {/* Coach notes as a river: notes drift in along a winding line */}
+      <section aria-labelledby="notes-title" className="legible relative mx-auto max-w-5xl px-10 py-24">
+        <h2 id="notes-title" className="sheet__title text-center">Coach notes</h2>
+        <svg className="river" viewBox="0 0 100 1000" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M50 0 C 80 60, 20 120, 50 180 S 80 300, 50 360 S 20 480, 50 540 S 80 660, 50 720 S 20 840, 50 900 S 60 960, 50 1000" />
+        </svg>
+        <ol className="relative mt-12 space-y-16">
           {notes.flatMap((g) => g.sections).map((section, i) => (
-            <Annotation key={section.id} index={i + 1} section={section} />
+            <li key={section.id} className={`md:w-[46%] ${i % 2 ? "md:ml-auto" : ""}`}>
+              <Reveal delay={60}>
+                <Annotation index={i + 1} section={section} />
+              </Reveal>
+            </li>
           ))}
-        </div>
+        </ol>
       </section>
 
       {/* Statistics */}
       <section aria-labelledby="statistics-title" className="mx-auto max-w-7xl px-10 pb-24">
-        <div className="flex flex-wrap items-end justify-between gap-6 border-t border-lavender-300/15 pt-8">
+        <div className="flex flex-wrap items-end justify-between gap-6 pt-8">
           <div>
             <h2 id="statistics-title" className="sheet__title">Statistics</h2>
             <p className="max-w-xl text-sm text-ink-muted">
@@ -135,7 +143,8 @@ function Spec({ label, value }: { label: string; value: string }) {
 function Annotation({ index, section }: { index: number; section: SectionView }) {
   return (
     <section id={section.id} className="scroll-mt-24">
-      <h3 className="flex items-baseline gap-4 border-b border-lavender-300/15 pb-2">
+      <h3 className="flex items-baseline gap-4 pb-2">
+        <span aria-hidden="true" className="river__node" />
         <span className="text-sm font-extralight tabular-nums text-blush-400">{String(index).padStart(2, "0")}</span>
         <span className="text-[0.78rem] uppercase tracking-[0.3em] text-ink">{section.title}</span>
       </h3>
@@ -155,7 +164,7 @@ function Annotation({ index, section }: { index: number; section: SectionView })
 function Note({ insight }: { insight: InsightView }) {
   return (
     <li>
-      <article className="pl-9">
+      <article className="pl-9 transition-transform duration-700 hover:translate-x-1">
         <p className="leading-relaxed text-ink-muted">{insight.claim}</p>
         {insight.quote && <p className="mt-2 text-sm italic text-lavender-200">“{insight.quote}”</p>}
         <p className="mt-2 text-[0.7rem] uppercase tracking-[0.18em] text-ink-faint">
