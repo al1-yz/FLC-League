@@ -1,9 +1,10 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { loadKnowledgeBase, type Lane } from "@/content";
 import { contentDir } from "@/content/config";
 import { EtherealScene } from "@/ui/EtherealScene";
 import { LaneGlyph } from "@/ui/LaneGlyph";
+import { MatchupSearch } from "@/ui/MatchupSearch";
+import { MatchupTable } from "@/ui/MatchupTable";
 
 export const dynamic = "force-dynamic";
 
@@ -53,34 +54,17 @@ export default async function ChampionPage({ params }: { params: Promise<{ lane:
           </p>
         </article>
 
-        <section aria-labelledby="matchups-title" className="reveal mt-16 w-full max-w-3xl" style={{ "--i": 3 } as React.CSSProperties}>
-          <h2 id="matchups-title" className="text-center text-[0.85rem] uppercase tracking-[0.3em] text-ink-muted">
-            Matchups
-          </h2>
+        <section aria-labelledby="matchups-title" className="reveal legible mt-16 w-full max-w-5xl" style={{ "--i": 3 } as React.CSSProperties}>
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <h2 id="matchups-title" className="sheet__title !mb-0">Matchups</h2>
+            <MatchupSearch lane={lane} focus={champion} champions={kb.champions()} />
+          </div>
           {matchups.length ? (
-            <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-              {matchups.map((m) => (
-                <li key={m.key}>
-                  <Link href={`/${m.key.replace("/", "/matchup/")}?as=${champion}`} className="glass-row">
-                    {m.opponent.icon ? (
-                      // eslint-disable-next-line @next/next/no-img-element -- local Catalog file
-                      <img src={m.opponent.icon} alt="" className="size-10 rounded-full" />
-                    ) : (
-                      <span className="size-10 rounded-full bg-stone-600" />
-                    )}
-                    <span className="flex-1">
-                      <span className="block text-ink">vs {m.opponent.name}</span>
-                      <span className="text-xs text-ink-faint">
-                        {m.insights} insight{m.insights === 1 ? "" : "s"}
-                      </span>
-                    </span>
-                    <span aria-hidden="true" className="text-blush-400">→</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <div className="mt-6">
+              <MatchupTable matchups={matchups} focus={champion} />
+            </div>
           ) : (
-            <p className="mt-6 text-center text-sm italic text-ink-faint">No matchups studied yet.</p>
+            <p className="mt-6 text-sm italic text-ink-faint">No matchups studied yet. Search for an opponent to start one.</p>
           )}
         </section>
       </section>
