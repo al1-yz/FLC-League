@@ -1,17 +1,9 @@
 <!--
 Sync Impact Report
-- Version change: (template, unversioned) → 1.0.0
-- Modified principles: none (initial ratification)
-- Added principles: I. Credit & Paraphrase; II. Permitted Data Access Only; III. Honest Statistics;
-  IV. Never Blend Perspectives; V. Local, $0, Personal; VI. Simplicity & Ubiquitous Language;
-  VII. Test Through Interfaces
-- Added sections: Scope Constraints; Development Workflow; Governance
-- Removed sections: none
-- Templates: none modified (they read the constitution at runtime)
-- Deferred TODOs: none
+- Version change: 1.0.0 → 1.0.1 (PATCH: product renamed LoLMechs → FLC, D16.1; no principle changes)
 -->
 
-# LoLMechs Constitution
+# FLC Constitution
 
 ## Core Principles
 
@@ -112,4 +104,4 @@ safe.
   materially expanded principles/sections, PATCH for clarifications.
 - Riot's policies MUST be re-checked before each major build phase (policy drift risk).
 
-**Version**: 1.0.0 | **Ratified**: 2026-11-04 | **Last Amended**: 2026-11-04
+**Version**: 1.0.1 | **Ratified**: 2026-11-04 | **Last Amended**: 2026-11-11

@@ -1,6 +1,6 @@
-# LoLMechs
+# FLC — Full Lane Control
 
-Personal League of Legends matchup study tool. Spec-driven: see `docs/discovery/decisions.md`,
+"Focus. Learn. Climb." Personal League of Legends matchup study tool (formerly LoLMechs; the local folder keeps that name). Spec-driven: see `docs/discovery/decisions.md`,
 `.specify/memory/constitution.md`, and `specs/`.
 
 ## Agent skills

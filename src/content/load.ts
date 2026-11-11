@@ -3,7 +3,7 @@ import { join, basename } from "node:path";
 import { parse } from "yaml";
 import type { z } from "zod";
 import { SECTION_GROUPS, sectionsFor, type ChampionId, type Lane, type MatchupKey } from "./domain";
-import { catalogFile, focusChampionsFile, matchupFile, matchupInsight, sourceFile } from "./schemas";
+import { archetypesFile, catalogFile, championFile, focusChampionsFile, matchupFile, matchupInsight, sourceFile } from "./schemas";
 
 type Insight = z.infer<typeof matchupInsight>;
 
@@ -24,8 +24,19 @@ export type ChampionView = { id: ChampionId; name: string; icon?: string; splash
 
 export type FocusChampion = { id: ChampionId; name: string; lane: Lane };
 
+export type ChampionProfile = ChampionView & {
+  primaryArchetype?: string;
+  secondaryArchetype?: string;
+  species?: string;
+};
+
+export type MatchupSummary = { key: MatchupKey; lane: Lane; opponent: ChampionView; insights: number };
+
 export type KnowledgeBase = {
+  currentPatch(): string;
   champion(id: ChampionId): ChampionView;
+  profile(id: ChampionId): ChampionProfile;
+  matchupsFor(focus: ChampionId, lane: Lane): MatchupSummary[];
   focusChampions(lane: Lane): FocusChampion[];
   matchup(key: MatchupKey, perspective: ChampionId): MatchupView;
 };
@@ -58,6 +69,15 @@ export function loadKnowledgeBase(contentDir: string): { kb: KnowledgeBase; repo
 
   const focus = focusChampionsFile.parse(readYaml(join(contentDir, "config", "focus-champions.yaml")));
 
+  const archetypesPath = join(contentDir, "config", "archetypes.yaml");
+  const archetypes = existsSync(archetypesPath) ? archetypesFile.parse(readYaml(archetypesPath)) : [];
+  const archetypeName = (id?: string) => archetypes.find((a) => a.id === id)?.name ?? id;
+
+  const profiles = new Map<ChampionId, z.infer<typeof championFile>>();
+  for (const file of yamlFiles(join(contentDir, "champions"))) {
+    profiles.set(basename(file, ".yaml"), championFile.parse(readYaml(join(contentDir, "champions", file))));
+  }
+
   const sources = new Map<string, { id: string; name: string }>();
   for (const file of yamlFiles(join(contentDir, "sources"))) {
     const id = basename(file, ".yaml");
@@ -73,7 +93,27 @@ export function loadKnowledgeBase(contentDir: string): { kb: KnowledgeBase; repo
   }
 
   const kb: KnowledgeBase = {
+    currentPatch: () => catalog.currentPatch,
     champion,
+    profile(id) {
+      const p = profiles.get(id);
+      return {
+        ...champion(id),
+        primaryArchetype: archetypeName(p?.primaryArchetype),
+        secondaryArchetype: archetypeName(p?.secondaryArchetype),
+        species: p?.species,
+      };
+    },
+    matchupsFor(focus, lane) {
+      return [...matchups.entries()]
+        .filter(([, m]) => m.lane === lane && m.champions.includes(focus))
+        .map(([key, m]) => ({
+          key,
+          lane,
+          opponent: champion(m.champions[0] === focus ? m.champions[1] : m.champions[0]),
+          insights: m.insights.length,
+        }));
+    },
     focusChampions(lane) {
       return focus[lane].map((id) => ({ id, name: championName(id), lane }));
     },

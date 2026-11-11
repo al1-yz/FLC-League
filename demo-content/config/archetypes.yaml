@@ -1,0 +1,10 @@
+# Approved community Archetypes (docs/domain/archetypes.md, ADR 0003)
+- { id: control-mage, name: Control Mage }
+- { id: burst-mage, name: Burst Mage }
+- { id: battlemage, name: Battlemage }
+- { id: artillery-mage, name: Artillery Mage }
+- { id: assassin, name: Assassin }
+- { id: skirmisher, name: Skirmisher }
+- { id: hypercarry-marksman, name: Hypercarry Marksman }
+- { id: lane-bully-marksman, name: Lane-bully Marksman }
+- { id: poke-utility-marksman, name: Poke/Utility Marksman }

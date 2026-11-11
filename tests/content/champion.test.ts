@@ -9,3 +9,11 @@ describe("Champion lookup", () => {
     expect(kb.champion("unknown")).toMatchObject({ id: "unknown", name: "unknown" });
   });
 });
+
+describe("Catalog", () => {
+  it("reports the current Patch from the Catalog", () => {
+    const { kb } = loadKnowledgeBase("tests/content/fixtures/baseline");
+
+    expect(kb.currentPatch()).toBe("16.22");
+  });
+});

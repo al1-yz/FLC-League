@@ -1,41 +1,26 @@
 import Link from "next/link";
-import type { ChampionView, InsightView, MatchupView, SectionView } from "@/content";
+import type { InsightView, SectionView } from "@/content";
 import { loadKnowledgeBase } from "@/content";
 import { contentDir } from "@/content/config";
+import { DetailCircle, LaneSection, PhaseStack } from "@/ui/Blueprint";
 import { ChampionBackdrop } from "@/ui/ChampionBackdrop";
-import { FlowLines } from "@/ui/FlowLines";
-import { ParticleWave } from "@/ui/ParticleWave";
-import { StepFlow, type Step } from "@/ui/StepFlow";
 
 export const dynamic = "force-dynamic";
 
-/** The game plan: Matchup Sections presented as coached steps, in the order a game unfolds. */
-const PLAN: { id: string; title: string; prompt: string; sections: string[] }[] = [
-  {
-    id: "step-lane",
-    title: "Read the lane",
-    prompt: "What kind of lane is this, and how does each side win it?",
-    sections: ["overview", "difficulty", "win-conditions", "support-influence"],
-  },
-  { id: "step-spikes", title: "Know the spikes", prompt: "When does each champion suddenly get stronger?", sections: ["power-spikes"] },
-  { id: "step-early", title: "Early game", prompt: "How do levels 1 to 5 play out?", sections: ["early-game"] },
-  {
-    id: "step-trading",
-    title: "Trade",
-    prompt: "How do you win the short exchanges?",
-    sections: ["trading-patterns", "trading-stance", "cooldown-windows"],
-  },
-  {
-    id: "step-windows",
-    title: "Pick your windows",
-    prompt: "When do you commit — and when do you back off?",
-    sections: ["all-in-windows", "kill-windows", "defensive-windows"],
-  },
-  { id: "step-mid", title: "Mid game", prompt: "What changes once the lane opens up?", sections: ["mid-game"] },
-  { id: "step-late", title: "Late game", prompt: "Who wins the long game, and how?", sections: ["late-game"] },
-  { id: "step-build", title: "Build for it", prompt: "Which runes, spells and items bend this matchup?", sections: ["runes", "summoner-spells", "itemization"] },
-];
+/** Opens video Sources at the stored timestamp (e.g. "07:42" → t=462). */
+function linkWithTimestamp(link: string, locator?: string): string {
+  if (!locator || !/^\d+(:\d{2}){1,2}$/.test(locator)) return link;
+  const seconds = locator.split(":").reduce((total, part) => total * 60 + Number(part), 0);
+  const url = new URL(link);
+  url.searchParams.set("t", String(seconds));
+  return url.toString();
+}
 
+/**
+ * Matchup page as an architectural analysis sheet (D16.4): splash art above, then labelled
+ * diagrams — game-phase stack, detail callouts, lane section — and the coach notes as plain,
+ * numbered annotations.
+ */
 export default async function MatchupPage({
   params,
   searchParams,
@@ -48,104 +33,89 @@ export default async function MatchupPage({
   const { kb } = loadKnowledgeBase(contentDir());
   const view = kb.matchup(`${lane}/${pair}`, as ?? pair.split("--")[0]);
   const [you, opponent] = view.champions;
+  const youProfile = kb.profile(you.id);
+  const opponentProfile = kb.profile(opponent.id);
 
   const sections = view.groups.flatMap((g) => g.sections);
+  const pick = (...ids: string[]) => ids.map((id) => sections.find((s) => s.id === id)).filter((s): s is SectionView => Boolean(s));
+  const notes = view.groups.filter((g) => g.id !== "statistics");
   const insights = sections.flatMap((s) => s.insights);
-  const about = (id: string) => insights.filter((i) => i.about === id || i.about === "both").length;
-  const steps: Step[] = PLAN.map((p) => ({
-    ...p,
-    sections: p.sections
-      .map((id) => sections.find((s) => s.id === id))
-      .filter((s): s is SectionView => Boolean(s)),
-  })).filter((s) => s.sections.length > 0);
 
   return (
-    <div className="-mx-10 -mt-12">
+    <div className="relative">
       <ChampionBackdrop splash={you.splash} label={you.skin} />
 
-      {/* Hero: you ⟶ matchup ⟵ opponent */}
-      <header className="reveal relative px-10 pt-12">
-        <p className="eyebrow">{view.lane === "mid" ? "Mid lane" : "Bot lane"} · Matchup</p>
-        <h1 className="mt-3 text-5xl font-medium tracking-tight md:text-6xl">
-          {you.name} <span className="align-middle text-2xl font-light text-blush-400">vs</span> {opponent.name}
+      {/* Title block */}
+      <header className="mx-auto max-w-7xl px-10 pt-16 pb-10">
+        <p className="reveal text-[0.72rem] uppercase tracking-[0.4em] text-ink-muted">
+          {view.lane === "mid" ? "Mid lane" : "Bot lane"} · Matchup analysis · Patch {kb.currentPatch()}
+        </p>
+        <h1 className="reveal mt-4 text-6xl font-extralight uppercase tracking-[0.22em] text-ink md:text-7xl" style={{ "--i": 1 } as React.CSSProperties}>
+          {you.name} <span className="text-blush-400">vs</span> {opponent.name}
         </h1>
-
-        <div className="relative mt-10 grid items-center gap-6 lg:grid-cols-[17rem_minmax(0,1fr)_17rem]">
-          <ChampionPanel
-            champion={you}
-            role="You"
-            tone="warm"
-            metrics={[
-              { label: "Insights about you", value: about(you.id) },
-              { label: "Sections covered", value: `${sections.filter((s) => s.insights.length).length} / ${sections.length}` },
-              { label: "Your verdict", value: "—", hint: "Record after your next game" },
-              { label: "Latest patch", value: latestPatch(insights) ?? "—" },
-            ]}
-          />
-          <div className="relative hidden h-[25rem] lg:block">
-            <FlowLines />
-            <Orb you={you} opponent={opponent} lane={view.lane} />
-          </div>
-          <ChampionPanel
-            champion={opponent}
-            role="Opponent"
-            tone="cool"
-            metrics={[
-              { label: "Insights about them", value: about(opponent.id) },
-              { label: "Archetype", value: "—", hint: "Not classified yet" },
-              { label: "Statistical difficulty", value: "n/a", hint: "Arrives with feature 002" },
-              { label: "Conflicts", value: 0 },
-            ]}
-          />
-        </div>
+        <dl className="reveal mt-8 grid max-w-3xl grid-cols-2 gap-x-10 gap-y-3 text-sm md:grid-cols-4" style={{ "--i": 2 } as React.CSSProperties}>
+          <Spec label="You" value={you.name} />
+          <Spec label="Archetype" value={youProfile.primaryArchetype ?? "—"} />
+          <Spec label="Opponent" value={opponent.name} />
+          <Spec label="Archetype" value={opponentProfile.primaryArchetype ?? "—"} />
+          <Spec label="Coach notes" value={String(insights.length)} />
+          <Spec label="Sections covered" value={`${sections.filter((s) => s.insights.length).length} / ${sections.length}`} />
+          <Spec label="Your verdict" value="—" />
+          <Spec label="Statistics" value="feature 002" />
+        </dl>
       </header>
 
-      {/* Game-plan rail over the particle wave */}
-      <nav aria-label="Game plan" className="relative mt-4">
-        <div className="relative h-56">
-          <ParticleWave className="absolute inset-0 h-full w-full" />
-          <ol className="relative mx-auto flex h-full max-w-6xl items-start justify-between px-10 pt-10">
-            {steps.map((step, i) => {
-              const count = step.sections.reduce((n, s) => n + s.insights.length, 0);
-              return (
-                <li key={step.id} className="reveal" style={{ "--i": i + 4 } as React.CSSProperties}>
-                  <a href={`#${step.id}`} className="group flex flex-col items-center gap-3 text-center">
-                    <span className="text-[0.65rem] font-medium uppercase tracking-[0.14em] text-ink-muted transition-colors group-hover:text-blush-300">
-                      {step.title}
-                    </span>
-                    <span className={`rail-node ${count ? "rail-node--filled" : ""}`} />
-                    <span className="text-[0.65rem] tabular-nums text-ink-faint">Step {i + 1}</span>
-                  </a>
-                </li>
-              );
-            })}
-          </ol>
-        </div>
-      </nav>
+      {/* Analysis sheet */}
+      <section aria-labelledby="analysis-title" className="mx-auto max-w-7xl px-10">
+        <div className="sheet reveal" style={{ "--i": 3 } as React.CSSProperties}>
+          <div className="grid gap-12 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+            <div>
+              <h2 id="analysis-title" className="sheet__title">Analysis of the game plan</h2>
+              <PhaseStack
+                phases={[
+                  { id: "power-spikes", label: "Power spikes", sections: pick("power-spikes") },
+                  { id: "early-game", label: "Early game", sections: pick("early-game") },
+                  { id: "mid-game", label: "Mid game", sections: pick("mid-game") },
+                  { id: "late-game", label: "Late game", sections: pick("late-game") },
+                ]}
+              />
+            </div>
+            <div className="flex flex-col justify-center gap-10">
+              <h2 className="sheet__title">Details</h2>
+              <DetailCircle id="trading-patterns" label="Trading" motif="trade" sections={pick("trading-patterns", "trading-stance", "cooldown-windows")} />
+              <DetailCircle id="all-in-windows" label="Windows" motif="window" sections={pick("all-in-windows", "kill-windows", "defensive-windows")} />
+              <DetailCircle id="runes" label="Build" motif="build" sections={pick("runes", "summoner-spells", "itemization")} />
+            </div>
+          </div>
 
-      {/* The game plan, step by step */}
-      <section aria-label="Game plan steps" className="px-10 pb-12">
-        <StepFlow steps={steps} />
+          <div className="mt-14">
+            <h2 className="sheet__title">Lane section · levels 1–18</h2>
+            <LaneSection />
+          </div>
+        </div>
+      </section>
+
+      {/* Coach notes as numbered annotations */}
+      <section aria-labelledby="notes-title" className="mx-auto max-w-7xl px-10 py-20">
+        <h2 id="notes-title" className="sheet__title">Coach notes</h2>
+        <div className="mt-8 grid gap-x-16 gap-y-14 md:grid-cols-2">
+          {notes.flatMap((g) => g.sections).map((section, i) => (
+            <Annotation key={section.id} index={i + 1} section={section} />
+          ))}
+        </div>
       </section>
 
       {/* Statistics */}
-      <section aria-labelledby="statistics-title" className="px-10 pb-20">
-        <div className="panel mx-auto flex max-w-5xl flex-wrap items-center gap-6 p-8">
-          <div className="min-w-0 flex-1">
-            <p className="eyebrow eyebrow--cool">Statistics</p>
-            <h2 id="statistics-title" className="mt-2 text-2xl font-normal text-ink">
-              Matchup analysis
-            </h2>
-            <p className="mt-2 text-ink-muted">
-              Own statistics from the Riot API arrive with feature 002. A design prototype of the analysis
-              view, with sample data, is ready for review.
+      <section aria-labelledby="statistics-title" className="mx-auto max-w-7xl px-10 pb-24">
+        <div className="flex flex-wrap items-end justify-between gap-6 border-t border-lavender-300/15 pt-8">
+          <div>
+            <h2 id="statistics-title" className="sheet__title">Statistics</h2>
+            <p className="max-w-xl text-sm text-ink-muted">
+              Own statistics from the Riot API arrive with feature 002. A design prototype with sample data is ready for review.
             </p>
           </div>
-          <Link
-            href={`/prototype/stats?lane=${view.lane}&champion=${you.id}`}
-            className="rounded-xl bg-blush-400 px-5 py-3 text-sm font-medium text-night-900 transition-colors hover:bg-blush-300"
-          >
-            Open the prototype →
+          <Link href={`/prototype/stats?lane=${view.lane}&champion=${you.id}`} className="glass-pill">
+            Open the statistics prototype →
           </Link>
         </div>
       </section>
@@ -153,59 +123,49 @@ export default async function MatchupPage({
   );
 }
 
-function latestPatch(insights: InsightView[]): string | undefined {
-  return insights.map((i) => i.patch).sort((a, b) => b.localeCompare(a, undefined, { numeric: true }))[0];
-}
-
-function ChampionPanel({
-  champion,
-  role,
-  tone,
-  metrics,
-}: {
-  champion: ChampionView;
-  role: string;
-  tone: "warm" | "cool";
-  metrics: { label: string; value: string | number; hint?: string }[];
-}) {
-  const accent = tone === "warm" ? "text-blush-300" : "text-lavender-200";
+function Spec({ label, value }: { label: string; value: string }) {
   return (
-    <aside className="panel reveal p-6" style={{ "--i": 2 } as React.CSSProperties}>
-      <div className="flex items-center gap-3">
-        {champion.icon ? (
-          // eslint-disable-next-line @next/next/no-img-element -- local Catalog file
-          <img src={champion.icon} alt="" className="size-11 rounded-full ring-1 ring-lavender-300/40" />
-        ) : (
-          <span className="size-11 rounded-full ring-1 ring-lavender-300/30" />
-        )}
-        <div>
-          <p className={`eyebrow ${tone === "cool" ? "eyebrow--cool" : ""}`}>{role}</p>
-          <p className={`text-xl font-medium ${accent}`}>{champion.name}</p>
-        </div>
-      </div>
-      <dl className="mt-6 space-y-5">
-        {metrics.map((m) => (
-          <div key={m.label}>
-            <dt className="text-[0.68rem] uppercase tracking-[0.14em] text-ink-faint">{m.label}</dt>
-            <dd className={`mt-1 text-2xl tabular-nums ${accent}`}>{m.value}</dd>
-            {m.hint && <dd className="text-[0.7rem] text-ink-faint">{m.hint}</dd>}
-          </div>
-        ))}
-      </dl>
-    </aside>
+    <div>
+      <dt className="text-[0.62rem] uppercase tracking-[0.28em] text-ink-faint">{label}</dt>
+      <dd className="mt-1 text-ink">{value}</dd>
+    </div>
   );
 }
 
-function Orb({ you, opponent, lane }: { you: ChampionView; opponent: ChampionView; lane: MatchupView["lane"] }) {
+function Annotation({ index, section }: { index: number; section: SectionView }) {
   return (
-    <div className="orb" aria-hidden="true">
-      <div className="orb__halo" />
-      <div className="orb__core">
-        <span className="eyebrow !text-[0.6rem]">{lane === "mid" ? "Mid" : "Bot"}</span>
-        <span className="text-lg leading-tight text-ink">{you.name}</span>
-        <span className="text-xs font-light text-blush-400">versus</span>
-        <span className="text-lg leading-tight text-ink">{opponent.name}</span>
-      </div>
-    </div>
+    <section id={section.id} className="scroll-mt-24">
+      <h3 className="flex items-baseline gap-4 border-b border-lavender-300/15 pb-2">
+        <span className="text-sm font-extralight tabular-nums text-blush-400">{String(index).padStart(2, "0")}</span>
+        <span className="text-[0.78rem] uppercase tracking-[0.3em] text-ink">{section.title}</span>
+      </h3>
+      {section.insights.length ? (
+        <ul className="mt-4 space-y-5">
+          {section.insights.map((insight) => (
+            <Note key={insight.id} insight={insight} />
+          ))}
+        </ul>
+      ) : (
+        <p className="mt-4 text-sm italic text-ink-faint">Awaiting coach notes.</p>
+      )}
+    </section>
+  );
+}
+
+function Note({ insight }: { insight: InsightView }) {
+  return (
+    <li>
+      <article className="pl-9">
+        <p className="leading-relaxed text-ink-muted">{insight.claim}</p>
+        {insight.quote && <p className="mt-2 text-sm italic text-lavender-200">“{insight.quote}”</p>}
+        <p className="mt-2 text-[0.7rem] uppercase tracking-[0.18em] text-ink-faint">
+          <a href={linkWithTimestamp(insight.link, insight.locator)} target="_blank" rel="noreferrer" className="text-blush-400 hover:text-blush-300">
+            {insight.source.name}
+            {insight.locator && ` @ ${insight.locator}`}
+          </a>
+          {" · "}Patch {insight.patch} · noted {insight.noted}
+        </p>
+      </article>
+    </li>
   );
 }
