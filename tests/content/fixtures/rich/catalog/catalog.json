@@ -1,0 +1,10 @@
+{
+  "currentPatch": "16.22",
+  "refreshedAt": "2026-11-11",
+  "champions": [
+    { "id": "akali", "name": "Akali" },
+    { "id": "zed", "name": "Zed" },
+    { "id": "orianna", "name": "Orianna" }
+  ],
+  "items": [{ "id": "3157", "name": "Zhonya's Hourglass" }]
+}

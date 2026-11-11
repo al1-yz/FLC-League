@@ -42,6 +42,7 @@ export const catalogFile = z.object({
       skin: z.string().optional(),
     }),
   ),
+  items: z.array(z.object({ id: z.string(), name: z.string() })).default([]),
 });
 
 export const focusChampionsFile = z.object({
@@ -78,6 +79,7 @@ export const looseInsight = z.object({
   patch: z.string().optional(),
   noted: z.string(),
   collectedBy: z.enum(["claude", "user"]),
+  spike: z.union([z.object({ level: z.number().int().min(1).max(18) }), z.object({ item: z.string() })]).optional(),
 });
 
 export const RANK_FILTERS = ["emerald_plus", "diamond_plus", "master_plus"] as const;

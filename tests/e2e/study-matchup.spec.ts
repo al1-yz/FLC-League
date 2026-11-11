@@ -65,3 +65,25 @@ test("content problems are listed on the validation report and flagged in the to
   await expect(issue).toContainText("R-PATCH");
   await expect(issue).toContainText("Patch like 16.22");
 });
+
+test("a Matchup between two Focus Champions shows sides, freshness, Conflicts and spikes", async ({ page }) => {
+  await page.goto("/mid/matchup/akali--zed?as=akali");
+
+  const older = page.getByRole("article").filter({ hasText: "Older claim about Zed." });
+  await expect(older).toContainText("Zed");
+  await expect(older).toContainText("Possibly outdated · 16.20");
+  await expect(page.getByRole("article").filter({ hasText: "Current claim about Akali." })).toContainText("You");
+
+  const conflict = page.getByRole("group", { name: "Conflicting coach notes" });
+  await expect(conflict).toContainText("Zed wins the level 3 all-in.");
+  await expect(conflict).toContainText("Akali wins the level 3 all-in.");
+
+  const spikes = page.locator("#power-spikes");
+  await expect(spikes).toContainText("Level 2");
+  await expect(spikes).toContainText("Level 6");
+  await expect(spikes).toContainText("Zhonya's Hourglass");
+
+  await page.getByRole("link", { name: /See it as Zed/ }).click();
+  await expect(page).toHaveURL(/as=zed/);
+  await expect(page.getByRole("article").filter({ hasText: "Older claim about Zed." })).toContainText("You");
+});

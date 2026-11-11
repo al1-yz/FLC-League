@@ -89,7 +89,7 @@ export function DetailCircle({ id, label, sections, motif }: { id: string; label
 }
 
 /** The lane over levels 1–18 as a slowly undulating line with Early / Mid / Late bands. */
-export function LaneSection() {
+export function LaneSection({ spikes = [] }: { spikes?: { level: number; side: "you" | "opponent" | "shared" }[] }) {
   const x = (level: number) => 40 + ((level - 1) / 17) * 920;
   const waves = [
     "M 40 70 C 200 50, 340 86, 500 62 S 820 44, 960 66",
@@ -121,12 +121,15 @@ export function LaneSection() {
         </text>
       ))}
       {Array.from({ length: 18 }, (_, i) => (
-        <text key={i} x={x(i + 1)} y="118" textAnchor="middle" fontSize="11.7" fill={[6, 11, 16].includes(i + 1) ? ACCENT : "#a69d97"}>
+        <text key={i} x={x(i + 1)} y="118" textAnchor="middle" fontSize="11.7" fill={spikes.some((sp) => sp.level === i + 1) ? ACCENT : "#a69d97"}>
           {i + 1}
         </text>
       ))}
-      {[6, 11, 16].map((level) => (
-        <circle key={level} cx={x(level)} cy="96" r="2.5" fill={ACCENT} className="pulse-soft" />
+      {spikes.map((spike, i) => (
+        <g key={`${spike.level}-${i}`}>
+          <line x1={x(spike.level)} x2={x(spike.level)} y1="40" y2="94" stroke={spike.side === "opponent" ? COOL : ACCENT} strokeOpacity="0.55" />
+          <circle cx={x(spike.level)} cy="40" r="4" fill={spike.side === "opponent" ? COOL : ACCENT} className="pulse-soft" />
+        </g>
       ))}
     </svg>
   );

@@ -21,7 +21,15 @@ type Reference = z.infer<typeof thirdPartyReference>;
 type Conflict = z.infer<typeof conflictEntry>;
 type Matchup = { lane: Lane; champions: [ChampionId, ChampionId]; insights: Insight[]; references: Reference[]; conflicts: Conflict[] };
 
-export type InsightView = Omit<Insight, "source"> & { source: { id: string; name: string } };
+/** "you" = about the Focus Champion being viewed, "opponent" = about the other side, "shared" = both. */
+export type Side = "you" | "opponent" | "shared";
+
+export type InsightView = Omit<Insight, "source"> & {
+  source: { id: string; name: string };
+  side: Side;
+  /** From a Patch older than the current one (FR-020). */
+  outdated: boolean;
+};
 
 export type MatchupView = {
   key: MatchupKey;
@@ -29,10 +37,21 @@ export type MatchupView = {
   perspective: ChampionId;
   /** Perspective champion first, Opponent second. */
   champions: [ChampionView, ChampionView];
+  /** The other champion, when both are Focus Champions of this Lane (FR-017). */
+  switchTo?: ChampionId;
   groups: { id: string; title: string; sections: SectionView[] }[];
 };
 
-export type SectionView = { id: string; title: string; insights: InsightView[] };
+export type SectionView = {
+  id: string;
+  title: string;
+  /** Current-Patch Insights first, then older ones (FR-020). */
+  insights: InsightView[];
+  /** Pairs of conflicting Insight ids, shown side by side (FR-021). */
+  conflicts: [string, string][];
+  /** Power spikes only: Insights grouped by level, then item, then the rest (FR-016). */
+  spikeGroups?: { label: string; insights: InsightView[] }[];
+};
 
 export type ChampionView = { id: ChampionId; name: string; icon?: string; splash?: string; skin?: string };
 
@@ -60,6 +79,12 @@ export type ValidationIssue = { file: string; entryId?: string; rule: string; me
 export type ValidationReport = { issues: ValidationIssue[] };
 
 const QUOTE_LIMIT = 200;
+
+function comparePatch(a: string, b: string): number {
+  const [a1, a2] = a.split(".").map(Number);
+  const [b1, b2] = b.split(".").map(Number);
+  return a1 - b1 || a2 - b2;
+}
 const PATCH_FORMAT = /^\d+\.\d+$/;
 
 function readYaml(path: string): unknown {
@@ -188,6 +213,7 @@ export function loadKnowledgeBase(contentDir: string): { kb: KnowledgeBase; repo
         if (i.quote && (i.quote.length > QUOTE_LIMIT || sentenceCount(i.quote) > 1))
           report(where, "R-QUOTE", `Quotes are limited to one sentence of at most ${QUOTE_LIMIT} characters.`, i.id);
         if (!allowedSections.has(i.section)) report(where, "R-SECTION", `Section "${i.section}" does not exist in the ${lane} template.`, i.id);
+        else if (i.spike && i.section !== "power-spikes") report(where, "R-SECTION", "Only Power spikes Insights can name a level or item spike.", i.id);
         if (i.about !== "both" && !champions.includes(i.about))
           report(where, "R-ABOUT", `"about" must be ${a}, ${b} or both.`, i.id);
         if (issues.length > before) continue;
@@ -258,26 +284,57 @@ export function loadKnowledgeBase(contentDir: string): { kb: KnowledgeBase; repo
       const m = matchups.get(key);
       if (!m) throw new Error(`Unknown Matchup: ${key}`);
       const opponent = m.champions[0] === perspective ? m.champions[1] : m.champions[0];
+      const bothFocus = m.champions.every((c) => focus[m.lane].includes(c));
+      const itemName = (id: string) => catalog.items.find((item) => item.id === id)?.name ?? `Item ${id}`;
+
+      const toView = (i: Insight): InsightView => {
+        const { id, name } = sources.get(i.source)!;
+        return {
+          ...i,
+          source: { id, name },
+          side: i.about === "both" ? "shared" : i.about === perspective ? "you" : "opponent",
+          outdated: comparePatch(i.patch, catalog.currentPatch) < 0,
+        };
+      };
+      const freshestFirst = (a: InsightView, b: InsightView) => comparePatch(b.patch, a.patch);
+
       return {
         key,
         lane: m.lane,
         perspective,
         champions: [champion(perspective), champion(opponent)],
+        ...(bothFocus && { switchTo: opponent }),
         groups: SECTION_GROUPS.map((g) => ({
           id: g.id,
           title: g.title,
           sections: sectionsFor(m.lane)
             .filter((s) => s.group === g.id)
-            .map((s) => ({
-              id: s.id,
-              title: s.title,
-              insights: m.insights
-                .filter((i) => i.section === s.id)
-                .map((i) => {
-                  const { id, name } = sources.get(i.source)!;
-                  return { ...i, source: { id, name } };
-                }),
-            })),
+            .map((s) => {
+              const insights = m.insights.filter((i) => i.section === s.id).map(toView).sort(freshestFirst);
+              const ids = new Set(insights.map((i) => i.id));
+              const view: SectionView = {
+                id: s.id,
+                title: s.title,
+                insights,
+                conflicts: m.conflicts.filter((c) => ids.has(c.insights[0])).map((c) => c.insights),
+              };
+              if (s.id === "power-spikes") {
+                const byLevel = new Map<number, InsightView[]>();
+                const byItem = new Map<string, InsightView[]>();
+                const general: InsightView[] = [];
+                for (const i of insights) {
+                  if (i.spike && "level" in i.spike) byLevel.set(i.spike.level, [...(byLevel.get(i.spike.level) ?? []), i]);
+                  else if (i.spike && "item" in i.spike) byItem.set(i.spike.item, [...(byItem.get(i.spike.item) ?? []), i]);
+                  else general.push(i);
+                }
+                view.spikeGroups = [
+                  ...[...byLevel].sort(([a], [b]) => a - b).map(([level, list]) => ({ label: `Level ${level}`, insights: list })),
+                  ...[...byItem].map(([item, list]) => ({ label: itemName(item), insights: list })),
+                  ...(general.length ? [{ label: "General", insights: general }] : []),
+                ];
+              }
+              return view;
+            }),
         })),
       };
     },
