@@ -50,3 +50,19 @@ test("Archetype Matchups are reachable from the top bar and show principles and 
   await expect(page.getByRole("region", { name: "Control Mage" }).getByRole("link", { name: "Orianna" })).toBeVisible();
   await expect(page.getByText("Not yet available")).toBeVisible();
 });
+
+test("the radial graph colours Opponents by one signal and opens their Matchups", async ({ page }) => {
+  await page.goto("/mid/akali");
+  await expect(page.getByRole("table")).toBeVisible();
+
+  await page.getByRole("button", { name: "Graph" }).click();
+  const graph = page.getByRole("img", { name: "Akali's matchups as a radial graph" });
+  await expect(graph).toBeVisible();
+  await expect(graph).toContainText("no verdict");
+
+  await page.getByLabel("Colour by").selectOption("statistical");
+  await expect(graph).toContainText("n/a");
+
+  await graph.getByRole("link", { name: "vs Zed" }).click();
+  await expect(page).toHaveURL(/\/mid\/matchup\/akali--zed\?as=akali/);
+});

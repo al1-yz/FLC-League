@@ -4,7 +4,7 @@ import { contentDir } from "@/content/config";
 import { EtherealScene } from "@/ui/EtherealScene";
 import { LaneGlyph } from "@/ui/LaneGlyph";
 import { MatchupSearch } from "@/ui/MatchupSearch";
-import { MatchupTable } from "@/ui/MatchupTable";
+import { MatchupViews } from "@/ui/MatchupViews";
 
 export const dynamic = "force-dynamic";
 
@@ -61,7 +61,7 @@ export default async function ChampionPage({ params }: { params: Promise<{ lane:
           </div>
           {matchups.length ? (
             <div className="mt-6">
-              <MatchupTable matchups={matchups} focus={champion} />
+              <MatchupViews matchups={matchups} focus={profile} />
             </div>
           ) : (
             <p className="mt-6 text-sm italic text-ink-faint">No matchups studied yet. Search for an opponent to start one.</p>
