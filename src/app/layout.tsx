@@ -4,6 +4,7 @@ import "./globals.css";
 import { loadKnowledgeBase } from "@/content";
 import { contentDir } from "@/content/config";
 import { Backdrop } from "@/ui/Backdrop";
+import { LiveReload } from "@/ui/LiveReload";
 import { TopBar } from "@/ui/TopBar";
 
 export const metadata: Metadata = {
@@ -18,6 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={GeistSans.variable}>
       <body className="flex min-h-screen flex-col">
         <Backdrop />
+        <LiveReload />
         <TopBar mid={kb.focusChampions("mid")} bot={kb.focusChampions("bot")} patch={kb.currentPatch()} issues={report.issues.length} />
         <main className="flex-1">{children}</main>
         <footer className="px-10 py-6 text-[0.8rem] leading-relaxed text-ink-faint">
