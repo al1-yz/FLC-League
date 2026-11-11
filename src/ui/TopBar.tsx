@@ -5,7 +5,7 @@ import type { FocusChampion } from "@/content";
  * Floating top bar (D16.2, D17.1): wordmark left, navigation centred, Patch right.
  * Lanes open a small menu of their Focus Champions.
  */
-export function TopBar({ mid, bot, patch }: { mid: FocusChampion[]; bot: FocusChampion[]; patch: string }) {
+export function TopBar({ mid, bot, patch, issues }: { mid: FocusChampion[]; bot: FocusChampion[]; patch: string; issues: number }) {
   return (
     <header className="topbar">
       <nav aria-label="Main" className="mx-auto grid max-w-7xl grid-cols-[1fr_auto_1fr] items-center px-6 py-3.5">
@@ -21,7 +21,15 @@ export function TopBar({ mid, bot, patch }: { mid: FocusChampion[]; bot: FocusCh
             </span>
           </li>
         </ul>
-        <span className="chip justify-self-end">Patch {patch}</span>
+        <span className="flex items-center gap-2 justify-self-end">
+          {issues > 0 && (
+            <Link href="/validation" className="chip !border-blush-400/50 !text-blush-300 hover:!bg-blush-400/10">
+              <span className="size-1.5 rounded-full bg-blush-400" aria-hidden="true" />
+              {issues} content issue{issues === 1 ? "" : "s"}
+            </Link>
+          )}
+          <span className="chip">Patch {patch}</span>
+        </span>
       </nav>
     </header>
   );

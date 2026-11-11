@@ -7,6 +7,6 @@ export default defineConfig({
     command: "npm run dev -- --port 3100",
     url: "http://localhost:3100",
     reuseExistingServer: !process.env.CI,
-    env: { LOLMECHS_CONTENT_DIR: "tests/content/fixtures/baseline", NEXT_DIST_DIR: ".next-e2e" },
+    env: { LOLMECHS_CONTENT_DIR: "tests/e2e/fixtures/content", NEXT_DIST_DIR: ".next-e2e" },
   },
 });

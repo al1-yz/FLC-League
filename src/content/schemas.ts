@@ -56,3 +56,43 @@ export const championFile = z.object({
   secondaryArchetype: z.string().optional(),
   species: z.string().optional(),
 });
+
+/** Loose shapes used while validating (D20.1): rules are checked explicitly and reported, not thrown. */
+export const looseMatchupFile = z.object({
+  lane: z.string(),
+  champions: z.tuple([z.string(), z.string()]),
+  insights: z.array(z.record(z.string(), z.unknown())).default([]),
+  references: z.array(z.record(z.string(), z.unknown())).default([]),
+  conflicts: z.array(z.record(z.string(), z.unknown())).default([]),
+});
+
+export const looseInsight = z.object({
+  id: z.string(),
+  section: z.string(),
+  about: z.string(),
+  claim: z.string(),
+  quote: z.string().optional(),
+  source: z.string(),
+  link: z.string().optional(),
+  locator: z.string().optional(),
+  patch: z.string().optional(),
+  noted: z.string(),
+  collectedBy: z.enum(["claude", "user"]),
+});
+
+export const RANK_FILTERS = ["emerald_plus", "diamond_plus", "master_plus"] as const;
+
+export const thirdPartyReference = z.object({
+  id: z.string(),
+  source: z.string(),
+  link: z.url(),
+  forChampion: z.string(),
+  rankFilter: z.string(),
+  patches: z.union([z.string(), z.object({ from: z.string(), to: z.string() })]),
+  games: z.number().int().nonnegative(),
+  winRate: z.number().optional(),
+  extra: z.record(z.string(), z.union([z.string(), z.number()])).optional(),
+  recorded: z.string(),
+});
+
+export const conflictEntry = z.object({ id: z.string(), insights: z.tuple([z.string(), z.string()]) });

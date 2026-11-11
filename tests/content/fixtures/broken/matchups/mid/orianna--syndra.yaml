@@ -1,0 +1,19 @@
+lane: mid
+champions: [orianna, syndra]
+insights:
+  - { id: ok-trading, section: trading-patterns, about: syndra, claim: Valid insight., source: video-coach, link: "https://example.com/v1", locator: "01:00", patch: "16.22", noted: 2026-11-11, collectedBy: claude }
+  - { id: ok-trading-2, section: trading-patterns, about: orianna, claim: Another valid insight., source: video-coach, link: "https://example.com/v2", locator: "02:00", patch: "16.22", noted: 2026-11-11, collectedBy: claude }
+  - { id: ok-early, section: early-game, about: both, claim: Valid early insight., source: video-coach, link: "https://example.com/v3", locator: "03:00", patch: "16.22", noted: 2026-11-11, collectedBy: claude }
+  - { id: bad-source, section: overview, about: both, claim: Unknown Source., source: nobody, link: "https://example.com/x", patch: "16.22", noted: 2026-11-11, collectedBy: claude }
+  - { id: bad-locator, section: overview, about: both, claim: Video without timestamp., source: video-coach, link: "https://example.com/x", patch: "16.22", noted: 2026-11-11, collectedBy: claude }
+  - { id: bad-patch, section: overview, about: both, claim: No Patch., source: video-coach, link: "https://example.com/x", locator: "01:00", noted: 2026-11-11, collectedBy: claude }
+  - { id: bad-quote, section: overview, about: both, claim: Quote too long., quote: "This quote is deliberately much longer than the two hundred character limit allowed for a verbatim quotation in an Insight, so that the validation rule about short quotes can be exercised by the rule coverage test.", source: video-coach, link: "https://example.com/x", locator: "01:00", patch: "16.22", noted: 2026-11-11, collectedBy: claude }
+  - { id: bad-section, section: support-influence, about: both, claim: Bot-only Section in Mid., source: video-coach, link: "https://example.com/x", locator: "01:00", patch: "16.22", noted: 2026-11-11, collectedBy: claude }
+  - { id: bad-about, section: overview, about: zed, claim: About a champion not in this Matchup., source: video-coach, link: "https://example.com/x", locator: "01:00", patch: "16.22", noted: 2026-11-11, collectedBy: claude }
+  - { id: ok-trading, section: overview, about: both, claim: Duplicate id., source: video-coach, link: "https://example.com/x", locator: "01:00", patch: "16.22", noted: 2026-11-11, collectedBy: claude }
+references:
+  - { id: ref-ok, source: stats-site, link: "https://example.com/stats/1", forChampion: orianna, rankFilter: emerald_plus, patches: "16.22", games: 412, winRate: 50.8, recorded: 2026-11-11 }
+  - { id: ref-gold, source: stats-site, link: "https://example.com/stats/2", forChampion: orianna, rankFilter: gold_plus, patches: "16.22", games: 9000, winRate: 51.2, recorded: 2026-11-11 }
+conflicts:
+  - { id: conflict-ok, insights: [ok-trading, ok-trading-2] }
+  - { id: conflict-bad, insights: [ok-trading, ok-early] }
