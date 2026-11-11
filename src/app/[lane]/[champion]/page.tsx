@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { loadKnowledgeBase, type Lane } from "@/content";
 import { contentDir } from "@/content/config";
-import { ChampionBackdrop } from "@/ui/ChampionBackdrop";
+import { EtherealScene } from "@/ui/EtherealScene";
 import { LaneGlyph } from "@/ui/LaneGlyph";
 
 export const dynamic = "force-dynamic";
@@ -23,7 +23,7 @@ export default async function ChampionPage({ params }: { params: Promise<{ lane:
 
   return (
     <div className="relative min-h-[calc(100vh-4.5rem)]">
-      <ChampionBackdrop splash={profile.splash} label={profile.skin} />
+      <EtherealScene />
 
       <section className="mx-auto flex max-w-7xl flex-col items-center px-6 pt-10 pb-16">
         <article className="capsule reveal" aria-labelledby="champion-name">

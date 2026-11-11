@@ -3,7 +3,7 @@ import type { InsightView, SectionView } from "@/content";
 import { loadKnowledgeBase } from "@/content";
 import { contentDir } from "@/content/config";
 import { DetailCircle, LaneSection, PhaseStack } from "@/ui/Blueprint";
-import { ChampionBackdrop } from "@/ui/ChampionBackdrop";
+import { EtherealScene } from "@/ui/EtherealScene";
 import { Reveal } from "@/ui/Reveal";
 
 export const dynamic = "force-dynamic";
@@ -44,7 +44,7 @@ export default async function MatchupPage({
 
   return (
     <div className="relative">
-      <ChampionBackdrop splash={you.splash} label={you.skin} />
+      <EtherealScene />
 
       {/* Title block */}
       <header className="legible mx-auto max-w-7xl px-10 pt-16 pb-10">
