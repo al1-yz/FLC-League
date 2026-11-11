@@ -143,3 +143,7 @@ Each grilling round's outcomes. **D** = decided, **O** = open, **H** = hypothesi
 
 - **D18.1** Champion splash art is **no longer used as a page background** (Data Dragon splashes look low-resolution at full screen). Champion and Matchup pages use a **Velvet Fjord palette scene**: slowly drifting lavender, blush, mauve and stone light over midnight, with the same blur-left treatment. Splash art remains only in the champion capsule's small circle.
 - **D18.2** Landing photo: "Kenai Fjords National Park (18d2be72…)" by Victoria Stauffenberg (US National Park Service, **public domain**), stored at `public/landing/fjord.jpg`, source recorded in `public/landing/README.md`.
+
+## Statistics prototype restyle — 2026-11-11
+
+- **D19.1** The statistics prototype follows the ethereal flow: palette scene, no boxes, floating key figures with orbiting rings, an influence map with curved currents and travelling lights, flowing handshake ribbons, a smooth game-length curve with a moving point, growing level-spike bars, plus a new **damage profile** and **phase strength** (sample data). The build quest becomes a winding trail. Sections drift in on scroll. Still sample data; real figures come with feature 002.

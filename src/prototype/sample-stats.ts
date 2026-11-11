@@ -41,6 +41,16 @@ export function sampleStats(championId: string, opponentIds: string[]) {
     archetypes: ["Control Mage", "Assassin", "Battlemage", "Burst Mage", "Artillery Mage", "Skirmisher"].map<SampleArchetype>(
       (name) => ({ name, games: Math.round(between(1_000, 14_000)), winRate: between(45, 55.5) }),
     ),
+    damage: (() => {
+      const magic = between(70, 90);
+      const physical = between(4, 100 - magic - 2);
+      return { magic, physical, true: 100 - magic - physical };
+    })(),
+    byPhase: [
+      { phase: "Early", winRate: between(46, 54) },
+      { phase: "Mid", winRate: between(46, 54) },
+      { phase: "Late", winRate: between(46, 55) },
+    ],
     buildPath: ["Starter", "First item", "Second item", "Third item", "Situational"].map((step) => ({
       step,
       winRate: between(46, 57),
