@@ -7,3 +7,7 @@ playwright-report/
 test-results/
 .claude/settings.local.json
 .next-e2e/
+
+# Third-party design references live in the private content repo (design-references/)
+docs/design/palette-*
+docs/design/reference-*

@@ -20,7 +20,7 @@ Each grilling round's outcomes. **D** = decided, **O** = open, **H** = hypothesi
 - **D1.11** Qualitative content comes from external creators (coaches, analysts, guides) and is **always credited** to its source. Purpose: teaching/personal study only. Statistical data is also aggregated from multiple sources.
 - **D1.12** Qualitative-first MVP is acceptable. Building our own stats pipeline is acceptable too (decision deferred to Phase 2 research).
 - **D1.13** Budget: **$0**. No stack preference; the stack is decided in Phase 5.
-- **D1.14** Visual direction: `docs/design/reference-direction.webp`, a dark, glassy, teal-accented UI with a radial relationship graph, a detail side panel with KPI cards, and an "ask a question" AI box. Direction only, not a spec.
+- **D1.14** Visual direction: `design-references/reference-direction.webp` (private content repo), a dark, glassy, teal-accented UI with a radial relationship graph, a detail side panel with KPI cards, and an "ask a question" AI box. Direction only, not a spec.
 
 ### Open after round 1
 - ~~O1.1~~ → D2.1 · ~~O1.2~~ → D2.2 · ~~O1.3~~ → D2.3
@@ -107,7 +107,7 @@ Each grilling round's outcomes. **D** = decided, **O** = open, **H** = hypothesi
 
 ## Art direction — 2026-11-09
 
-- **D12.1** Art direction changed to **"Antique Gold & Deep Violet"** (#B9A38B / #2C1F33; `docs/design/palette-antique-gold-deep-violet.png`). It supersedes the teal accent from D1.14; the original reference image is kept for layout only. Luxurious and elegant: Fraunces display serif + Jost text (self-hosted), animated ambient patterns (drifting glow, art-deco fan pattern, gold title glint, drawn ornaments, staggered reveals), with data shown high-contrast and static. Motion respects `prefers-reduced-motion`.
+- **D12.1** Art direction changed to **"Antique Gold & Deep Violet"** (#B9A38B / #2C1F33; `design-references/palette-antique-gold-deep-violet.png` (private content repo)). It supersedes the teal accent from D1.14; the original reference image is kept for layout only. Luxurious and elegant: Fraunces display serif + Jost text (self-hosted), animated ambient patterns (drifting glow, art-deco fan pattern, gold title glint, drawn ornaments, staggered reveals), with data shown high-contrast and static. Motion respects `prefers-reduced-motion`.
 
 ## Matchup redesign — 2026-11-09
 
@@ -122,8 +122,8 @@ Each grilling round's outcomes. **D** = decided, **O** = open, **H** = hypothesi
 ## Step-by-step redesign — 2026-11-11
 
 - **D15.1** General Concepts are **removed from the Matchup page** and live only on their own General Concept pages (ticket 10). The Matchup template is now 17 Sections (Mid) / 18 (Bot) in 6 groups. Supersedes the General Concepts group of D13.1. FR-019 (Section → concept links) stays: Matchup Sections may still link out to concepts.
-- **D15.2** Palette changed to **"Velvet Fjord"** (#23211B, #504C48, #988382, #B8B3CA, #E5B8A8; `docs/design/palette-velvet-fjord.webp`); blush is the glowing accent, lavender is for opponent/secondary data. Supersedes D12.1. Type: **Aeonik** is used when installed locally (it's a commercial font and can't be bundled or committed); otherwise **Geist** (OFL), which is close in style.
-- **D15.3** The Matchup Sections are presented as a **connected step-by-step game plan** (`docs/design/reference-step-flow.png`): Read the lane → Know the spikes → Early game → Trade → Pick your windows → Mid game → Late game → Build for it, with a step rail on the particle wave. This replaces the category cards. Presentation only; the content model is unchanged.
+- **D15.2** Palette changed to **"Velvet Fjord"** (#23211B, #504C48, #988382, #B8B3CA, #E5B8A8; `design-references/palette-velvet-fjord.webp` (private content repo)); blush is the glowing accent, lavender is for opponent/secondary data. Supersedes D12.1. Type: **Aeonik** is used when installed locally (it's a commercial font and can't be bundled or committed); otherwise **Geist** (OFL), which is close in style.
+- **D15.3** The Matchup Sections are presented as a **connected step-by-step game plan** (`design-references/reference-step-flow.png` (private content repo)): Read the lane → Know the spikes → Early game → Trade → Pick your windows → Mid game → Late game → Build for it, with a step rail on the particle wave. This replaces the category cards. Presentation only; the content model is unchanged.
 - **D15.4** A **statistics analysis prototype** (`/prototype/stats`, clearly marked sample data) explores a gamified view: ring KPIs, tier badge, an influence map of opponents, an archetype "handshake" diagram, win rate by game length with Early/Mid/Late bands, level-spike bars, and a build quest line. Real data comes with feature 002; awaiting the user's review.
 
 ## FLC experience redesign — 2026-11-11
@@ -136,7 +136,7 @@ Each grilling round's outcomes. **D** = decided, **O** = open, **H** = hypothesi
 ## Ethereal review — 2026-11-11
 
 - **D17.1** Top bar shows only "FLC" (no subtitle), with navigation centred. The landing drops the numbered lane lists; under FLC sits "Focus · Learn · Climb", and a lower text block reads "Full Lane Control" with a short description, no numbers.
-- **D17.2** **Ethereal split scene** (`docs/design/reference-ethereal-split.png`): images are sharp on the right and dissolve into blur and mist on the left. Used for the landing photo and for champion splash backgrounds. The procedural fjord is removed. The landing photo goes in `public/landing/fjord.jpg` and must be public-domain/CC0 or the user's own (source recorded in `public/landing/README.md`); a soft gradient is shown until then.
+- **D17.2** **Ethereal split scene** (`design-references/reference-ethereal-split.png` (private content repo)): images are sharp on the right and dissolve into blur and mist on the left. Used for the landing photo and for champion splash backgrounds. The procedural fjord is removed. The landing photo goes in `public/landing/fjord.jpg` and must be public-domain/CC0 or the user's own (source recorded in `public/landing/README.md`); a soft gradient is shown until then.
 - **D17.3** **Flow over analysis feel.** The dark sheet box is removed. Game-phase plates float, and a glowing current with travelling lights weaves through them on curved leader lines. Detail callouts breathe and have slowly turning orbits, and the lane line undulates. Coach notes become a **river**: they alternate along a winding dotted line and drift in out of the mist as you scroll.
 
 ## Backgrounds — 2026-11-11

@@ -2,7 +2,7 @@ import { Snowfall } from "./Snowfall";
 
 /**
  * Full-bleed image that is clear on the right and dissolves into blur and mist on the left
- * (D17.2, after docs/design/reference-ethereal-split.png). Used by the landing and champion pages.
+ * (D17.2, after `design-references/reference-ethereal-split.png` (private content repo)). Used by the landing and champion pages.
  * Without an image it falls back to soft drifting light only.
  */
 export function EtherealScene({ image, snow = false, focus = "70% 30%" }: { image?: string; snow?: boolean; focus?: string }) {

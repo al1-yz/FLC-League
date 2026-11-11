@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /*
- * Art direction: "Velvet Fjord" (docs/design/palette-velvet-fjord.webp, D15.2).
+ * Art direction: "Velvet Fjord" (`design-references/palette-velvet-fjord.webp` (private content repo), D15.2).
  * Midnight fjord surfaces, weathered stone structure, dusky mauve for quiet text,
  * lavender haze for the opponent / secondary data, blush horizon as the glowing accent.
  * Type: Aeonik when installed on the system, otherwise Geist (OFL).

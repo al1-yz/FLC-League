@@ -22,7 +22,7 @@ description: "Task list for 001 Matchup Knowledge Base"
 
 - [ ] T001 Initialize Next.js 16 (App Router, TypeScript version supported by Next 16) project at repository root with `package.json` scripts `dev`, `start`, `test`, `test:e2e`, `catalog:refresh`, `schema:generate`
 - [ ] T002 [P] Add dependencies `zod@4`, `yaml@2.9`, `chokidar@6`, `d3@7`, `tailwindcss@4` and dev dependencies `vitest@5`, `@playwright/test@1.65` in `package.json`
-- [ ] T003 [P] Configure Tailwind 4 theme tokens (dark background, glass panel, teal accent, difficulty scale 1–5 + neutral) in `src/theme/tokens.css` per `docs/design/reference-direction.webp`
+- [ ] T003 [P] Configure Tailwind 4 theme tokens (dark background, glass panel, teal accent, difficulty scale 1–5 + neutral) in `src/theme/tokens.css` per `design-references/reference-direction.webp` (private content repo)
 - [ ] T004 [P] Configure Vitest in `vitest.config.ts` and Playwright in `playwright.config.ts`
 - [ ] T005 [P] Add `.env.local` to `.gitignore` and read `LOLMECHS_CONTENT_DIR` (fallback `./demo-content`) in `src/content/config.ts`
 
