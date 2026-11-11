@@ -49,14 +49,14 @@ description: "Task list for 001 Matchup Knowledge Base"
 
 **Goal**: Orianna vs Syndra readable end-to-end. **Independent test**: quickstart V2.
 
-- [ ] T016 [P] [US1] Test `kb.matchup(key, perspective)`: 22 Mid Sections in template order, gap markers, `about` → you/Opponent/shared, outdated flag, current-Patch first, Conflict pairs, in `tests/content/matchup-view.test.ts`
+- [ ] T016 [P] [US1] Test `kb.matchup(key, perspective)`: 17 Mid Sections in template order, gap markers, `about` → you/Opponent/shared, outdated flag, current-Patch first, Conflict pairs, in `tests/content/matchup-view.test.ts`
 - [ ] T017 [US1] Implement `matchup(key, perspective)` view building (FR-015–FR-021), Power spikes grouped by level 1–18 and by item (FR-016) in `src/content/views/matchup.ts`
 - [ ] T018 [P] [US1] Build Insight card (claim, optional quote, Source name, link with timestamp, Patch, noted date, Unreviewed and possibly-outdated badges) in `src/ui/InsightCard.tsx`
 - [ ] T019 [P] [US1] Build side-by-side Conflict component with no ranking (FR-021) in `src/ui/ConflictPair.tsx`
 - [ ] T020 [US1] Build Matchup page with `?as=<champion>` perspective and perspective switch when both are Focus Champions (FR-017) in `src/app/[lane]/matchup/[pair]/page.tsx`
 - [ ] T021 [US1] Section → General Concept links from `config/section-concepts.yaml` (FR-019) in `src/content/views/matchup.ts`
 - [ ] T022 [US1] Write a small user-authored example Matchup (Me notes and placeholder Insights only, NO collected third-party content, per constitution V and FR-026a) in `demo-content/matchups/mid/orianna--syndra.yaml`
-- [ ] T022a [US1] Collect real Orianna vs Syndra content: Claude researches approved Sources (`docs/discovery/sources-shortlist.md`) and writes credited, paraphrased Insights covering all 22 Mid Sections plus ≥1 Conflict and ≥1 LoLalytics Third-party Reference; the user reviews (SC-001) in the PRIVATE content repo `matchups/mid/orianna--syndra.yaml`
+- [ ] T022a [US1] Collect real Orianna vs Syndra content: Claude researches approved Sources (`docs/discovery/sources-shortlist.md`) and writes credited, paraphrased Insights covering all 17 Mid Sections plus ≥1 Conflict and ≥1 LoLalytics Third-party Reference; the user reviews (SC-001) in the PRIVATE content repo `matchups/mid/orianna--syndra.yaml`
 - [ ] T023 [US1] Playwright flow "study a Matchup" (V2) in `tests/e2e/study-matchup.spec.ts`
 
 ---

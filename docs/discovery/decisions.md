@@ -118,3 +118,10 @@ Each grilling round's outcomes. **D** = decided, **O** = open, **H** = hypothesi
 ## Riot API — 2026-11-09
 
 - **D14.1** Riot approved the **personal API key** (D4.1 done). The key lives only in `.env.local` as `RIOT_API_KEY` (git-ignored) and is never pasted into chat, committed, or written to the content repo. It is used by feature 002 (statistics collector); feature 001 never touches the network.
+
+## Step-by-step redesign — 2026-11-11
+
+- **D15.1** General Concepts are **removed from the Matchup page** and live only on their own General Concept pages (ticket 10). The Matchup template is now 17 Sections (Mid) / 18 (Bot) in 6 groups. Supersedes the General Concepts group of D13.1. FR-019 (Section → concept links) stays: Matchup Sections may still link out to concepts.
+- **D15.2** Palette changed to **"Velvet Fjord"** (#23211B, #504C48, #988382, #B8B3CA, #E5B8A8; `docs/design/palette-velvet-fjord.webp`); blush is the glowing accent, lavender is for opponent/secondary data. Supersedes D12.1. Type: **Aeonik** is used when installed locally (it's a commercial font and can't be bundled or committed); otherwise **Geist** (OFL), which is close in style.
+- **D15.3** The Matchup Sections are presented as a **connected step-by-step game plan** (`docs/design/reference-step-flow.png`): Read the lane → Know the spikes → Early game → Trade → Pick your windows → Mid game → Late game → Build for it, with a step rail on the particle wave. This replaces the category cards. Presentation only; the content model is unchanged.
+- **D15.4** A **statistics analysis prototype** (`/prototype/stats`, clearly marked sample data) explores a gamified view: ring KPIs, tier badge, an influence map of opponents, an archetype "handshake" diagram, win rate by game length with Early/Mid/Late bands, level-spike bars, and a build quest line. Real data comes with feature 002; awaiting the user's review.

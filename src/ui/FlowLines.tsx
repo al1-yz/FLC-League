@@ -17,12 +17,12 @@ export function FlowLines() {
     <svg className="flow-lines" viewBox="0 0 1000 400" preserveAspectRatio="none" aria-hidden="true">
       <defs>
         <linearGradient id="flow-left" x1="0" x2="1">
-          <stop offset="0" stopColor="#B9A38B" stopOpacity="0.15" />
-          <stop offset="1" stopColor="#dccbb6" stopOpacity="0.9" />
+          <stop offset="0" stopColor="#E5B8A8" stopOpacity="0.15" />
+          <stop offset="1" stopColor="#efcfc3" stopOpacity="0.9" />
         </linearGradient>
         <linearGradient id="flow-right" x1="1" x2="0">
-          <stop offset="0" stopColor="#9b7bd0" stopOpacity="0.15" />
-          <stop offset="1" stopColor="#c9b3f2" stopOpacity="0.9" />
+          <stop offset="0" stopColor="#B8B3CA" stopOpacity="0.15" />
+          <stop offset="1" stopColor="#d3cfe0" stopOpacity="0.9" />
         </linearGradient>
       </defs>
       {(["left", "right"] as const).map((side) =>

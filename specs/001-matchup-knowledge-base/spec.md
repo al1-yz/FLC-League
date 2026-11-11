@@ -31,7 +31,7 @@ Before or during champion select, the user opens the Matchup they are about to p
 
 **Acceptance Scenarios**:
 
-1. **Given** Orianna vs Syndra (Mid) has Insights, **When** the user opens it from Orianna, **Then** the page shows the 22 Mid Sections in their groups and fixed order (all template Sections except "Support influence"), from Orianna's perspective.
+1. **Given** Orianna vs Syndra (Mid) has Insights, **When** the user opens it from Orianna, **Then** the page shows the 17 Mid Sections in their groups and fixed order (all template Sections except "Support influence"), from Orianna's perspective.
 2. **Given** an Insight from a video Source, **When** it is displayed, **Then** it shows the Source name, a link that opens the video at the stored timestamp, its Patch, and the date it was noted.
 3. **Given** a section with no Insights, **When** the page is shown, **Then** that section is still displayed with a visible "no Source covers this yet" gap marker.
 4. **Given** two Insights marked as a Conflict, **When** their section is shown, **Then** both appear next to each other, labeled as conflicting, each with its own credit, and neither is visually ranked above the other.
@@ -185,7 +185,7 @@ In a Matchup's Statistics section, the user sees hand-recorded Third-party Refer
 - **New Patch**: after a catalog refresh, all Matchup and champion Insights from earlier Patches show "possibly outdated". General Concept Insights are unaffected.
 - **Two Focus Champions meet** (Akali vs Zed): one Matchup, stored once, listed on both pages, each showing its own perspective.
 - **Bot Matchup with a non-marksman** (Ziggs vs Ezreal): valid; Ziggs keeps his own Archetype (I19).
-- **Lane-conditional sections**: "Roaming" and "Map pressure" only appear in Mid; "Support influence" only in Bot. Content placing an Insight in the wrong lane's section is reported as invalid (I6).
+- **Lane-conditional sections**: "Support influence" only appears in Bot. Content placing an Insight in the wrong lane's section is reported as invalid (I6).
 - **Conflict across Patches**: two conflicting Insights from different Patches are still shown side by side, each with its own Patch and outdated marker.
 - **Rejecting an Insight that is part of a Conflict**: the Insight is deleted and the Conflict is removed with it; the remaining Insight is shown normally.
 - **Champion with no Primary Archetype**: excluded from Archetype Matchup champion lists and shown as "not classified".
@@ -221,8 +221,8 @@ In a Matchup's Statistics section, the user sees hand-recorded Third-party Refer
 **Matchups**
 
 - **FR-014**: A Matchup MUST be identified by its two champions and Lane, regardless of order, and at least one champion MUST be a Focus Champion of that Lane (I4, I5).
-- **FR-015**: Every Matchup page MUST show the fixed template of single-topic Sections (no compound Sections, D13.1), in groups and in this order: **Overview** (Overview; Difficulty; Win conditions; Support influence, Bot only), **Game timeline** (Power spikes; Early game; Mid game; Late game), **Trading** (Trading patterns; Trading stance; Cooldown windows), **Windows** (All-in windows; Kill windows; Defensive windows), **Build** (Runes; Summoner spells; Itemization), **General Concepts** (Tethering; Wave management; Lane priority; Roaming, Mid only; Map pressure, Mid only), **Statistics**. Mid has 22 Sections, Bot 21 (I6).
-- **FR-015a**: The Matchup page MUST use the Focus Champion's splash art (skin chosen per champion in the Content Repository's configuration, from the Catalog) as its background when available, and show the two champions as panels around a central matchup element, with the Game timeline above the detailed groups (D13.2).
+- **FR-015**: Every Matchup page MUST show the fixed template of single-topic Sections (no compound Sections, D13.1), in groups and in this order: **Overview** (Overview; Difficulty; Win conditions; Support influence, Bot only), **Game timeline** (Power spikes; Early game; Mid game; Late game), **Trading** (Trading patterns; Trading stance; Cooldown windows), **Windows** (All-in windows; Kill windows; Defensive windows), **Build** (Runes; Summoner spells; Itemization), **Statistics**. Mid has 17 Sections, Bot 18. General Concepts (tethering, wave management, lane priority, roaming, map pressure…) are NOT Matchup Sections; they live only on General Concept pages (D15.1).
+- **FR-015a**: The Matchup page MUST use the Focus Champion's splash art (skin chosen per champion in the Content Repository's configuration, from the Catalog) as its background when available, show the two champions as panels around a central matchup element, and present the Sections (except Statistics) as a numbered, connected step-by-step game plan with a step rail (D13.2, D15.3).
 - **FR-016**: The Power spikes section MUST organize Insights by level (1–18) and by item, not as one undivided list.
 - **FR-017**: A Matchup page MUST be shown from the perspective of the Focus Champion it was opened from. When both champions are Focus Champions, the user MUST be able to switch perspective.
 - **FR-018**: Each section with no Insights MUST show a gap marker.
@@ -289,7 +289,7 @@ In a Matchup's Statistics section, the user sees hand-recorded Third-party Refer
 
 ### Measurable Outcomes
 
-- **SC-001**: The Orianna vs Syndra Matchup is fully filled: all 22 Mid Sections contain at least one credited Insight or Me note, and at least one Conflict is shown side by side.
+- **SC-001**: The Orianna vs Syndra Matchup is fully filled: all 17 Mid Sections contain at least one credited Insight or Me note, and at least one Conflict is shown side by side.
 - **SC-002**: At least 3 General Concept pages (including Wave Management and Lane Priority) have credited Insights and working "Applied in" links from Orianna vs Syndra.
 - **SC-003**: From app launch, the user reaches any existing Matchup in at most 3 clicks.
 - **SC-004**: Recording or updating a Verdict after a game takes under 30 seconds.
@@ -309,7 +309,7 @@ In a Matchup's Statistics section, the user sees hand-recorded Third-party Refer
 - A Matchup appears on a Focus Champion page once it has any content (Insight, Me note, Verdict or Third-party Reference). Other Opponents are reachable through search (FR-031).
 - Statistical difficulty is shown as "not available" until feature 002 provides own statistics. Third-party References do not produce a difficulty rating.
 - The quote length limit (200 characters, one sentence) is a working default and may be tuned.
-- The visual style follows the "Antique Gold & Deep Violet" art direction (`docs/design/palette-antique-gold-deep-violet.png`, D12.1): deep violet surfaces, antique gold structure, ivory text, slow ambient animation, with data kept high-contrast and still. `docs/design/reference-direction.webp` remains a layout reference only.
+- The visual style follows the "Velvet Fjord" art direction (`docs/design/palette-velvet-fjord.webp`, D15.2), superseding "Antique Gold & Deep Violet" (`docs/design/palette-antique-gold-deep-violet.png`, D12.1): deep violet surfaces, antique gold structure, ivory text, slow ambient animation, with data kept high-contrast and still. `docs/design/reference-direction.webp` remains a layout reference only.
 - Initial Opponents for the validation slice are chosen by the user or suggested by Claude (D1.8); only Orianna vs Syndra must be complete for SC-001.
 
 ## Dependencies

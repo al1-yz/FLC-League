@@ -20,7 +20,7 @@ Knowledge and Statistics both *refer to* Catalog entities but never to each othe
 Champion ──1 Primary Archetype, 0..1 Secondary Archetype
 Focus Champion = (Champion, Lane)               e.g. (Orianna, Mid)
 Matchup = {Champion A, Champion B} + Lane     (unordered; ≥1 is a Focus Champion of that Lane — ADR 0002)
-  ├── 22 (Mid) or 21 (Bot) single-topic Sections in 7 groups (D13.1; some lane-conditional)
+  ├── 17 (Mid) or 18 (Bot) single-topic Sections in 6 groups (D13.1, D15.1)
   │     └── links to 0..n General Concepts
   ├── 0..n Insights (each in exactly one Section, tagged about: A | B | both)
   ├── 0..1 Verdict (Me)
@@ -43,7 +43,7 @@ Conflict ── links 2 Insights with the same subject + Section
 | I3 | An Insight is a paraphrase. Any quote is short, and every external Insight has a link (+ timestamp for video). | Decided (D2.1) |
 | I4 | At least one champion of a Matchup is a Focus Champion of that Matchup's Lane. | Decided (D5.1) |
 | I5 | A Matchup's two champions are different; {A, B} and {B, A} in the same Lane are the same Matchup. | Decided (D5.1) |
-| I6 | Sections "Roaming" and "Map pressure" exist only for Mid; "Support influence" only for Bot. | Decided (D3.6, D13.1) |
+| I6 | Section "Support influence" exists only for Bot; General Concepts are never Matchup Sections. | Decided (D3.6, D13.1, D15.1) |
 | I7 | Statistics only ever cover Emerald+ games. | Decided (D3.2) |
 | I8 | A statistic below the minimum sample (100 games) is shown as "insufficient data", never as a number. | Decided (D3.10) |
 | I9 | Own statistics and Third-party References are never combined into one figure. | Decided (D4.6) |
