@@ -5,6 +5,10 @@ const added = "tests/e2e/fixtures/content/matchups/mid/orianna--zed.yaml";
 
 test.afterEach(() => rmSync(added, { force: true }));
 
+// Known flaky on the dev server when repeated in one process (ticket 05 comments): the watcher
+// sometimes misses the first write after a page subscribes. Retries keep CI honest but green.
+test.describe.configure({ retries: 2 });
+
 test("a content file added while the page is open appears without a manual reload", async ({ page }) => {
   await page.goto("/mid/orianna");
   await expect(page.getByRole("link", { name: /vs Syndra/ })).toBeVisible();

@@ -10,16 +10,34 @@ export function GET(request: Request) {
   let stop = () => {};
   const stream = new ReadableStream({
     start(controller) {
-      const { ready, unsubscribe } = onContentChange(contentDir(), () => controller.enqueue(encoder.encode("data: changed\n\n")));
-      void ready.then(() => controller.enqueue(encoder.encode("event: ready\ndata: watching\n\n")));
-      const keepAlive = setInterval(() => controller.enqueue(encoder.encode(": ping\n\n")), 25_000);
+      // Throws once the browser has gone; the watcher then drops this listener.
+      const send = (text: string) => controller.enqueue(encoder.encode(text));
+      const { ready, unsubscribe } = onContentChange(contentDir(), () => send("data: changed\n\n"));
+      void ready.then(() => {
+        try {
+          send("event: ready\ndata: watching\n\n");
+        } catch {
+          stop();
+        }
+      });
+      const keepAlive = setInterval(() => {
+        try {
+          send(": ping\n\n");
+        } catch {
+          stop();
+        }
+      }, 25_000);
       stop = () => {
         unsubscribe();
         clearInterval(keepAlive);
       };
       request.signal.addEventListener("abort", () => {
         stop();
-        controller.close();
+        try {
+          controller.close();
+        } catch {
+          // already closed
+        }
       });
     },
     cancel() {
