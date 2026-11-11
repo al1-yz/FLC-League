@@ -12,6 +12,7 @@ import {
   championFile,
   conflictEntry,
   focusChampionsFile,
+  looseArchetypeMatchupFile,
   looseInsight,
   looseMatchupFile,
   sourceFile,
@@ -76,6 +77,15 @@ export type ChampionInsightView = Omit<InsightView, "section" | "about" | "side"
 
 export type OpponentView = ChampionProfile & { insights: ChampionInsightView[]; matchups: { key: MatchupKey; lane: Lane; other: ChampionView }[] };
 
+export type ArchetypeMatchupView = {
+  key: string;
+  lane: Lane;
+  archetypes: { id: string; name: string; champions: ChampionView[] }[];
+  insights: ChampionInsightView[];
+  /** Existing Matchups between champions of the two Archetypes (by Primary Archetype). */
+  matchups: MatchupKey[];
+};
+
 export type MatchupSummary = {
   key: MatchupKey;
   lane: Lane;
@@ -97,6 +107,8 @@ export type KnowledgeBase = {
   focusChampions(lane: Lane): FocusChampion[];
   matchup(key: MatchupKey, perspective: ChampionId): MatchupView;
   opponent(id: ChampionId): OpponentView;
+  archetypeMatchup(key: string): ArchetypeMatchupView;
+  archetypeMatchups(): { key: string; lane: Lane; names: [string, string]; insights: number }[];
 };
 
 /** One rejected entry or file: where it is, which load rule it breaks, and why (FR-009). */
@@ -305,6 +317,55 @@ export function loadKnowledgeBase(contentDir: string): { kb: KnowledgeBase; repo
     }
   }
 
+  // Archetype Matchups (FR-034): authored Insights per Archetype pair and Lane.
+  const archetypeMatchups = new Map<string, { lane: Lane; archetypes: [string, string]; insights: Insight[] }>();
+  for (const folder of ["mid", "bot"] as const) {
+    for (const file of yamlFiles(join(contentDir, "archetype-matchups", folder))) {
+      const where = `archetype-matchups/${folder}/${file}`;
+      const parsed = looseArchetypeMatchupFile.safeParse(readYaml(join(contentDir, "archetype-matchups", folder, file)));
+      if (!parsed.success) {
+        report(where, "R-SHAPE", `Not a valid Archetype Matchup file: ${parsed.error.issues[0]?.message}`);
+        continue;
+      }
+      const { lane, archetypes: pair, insights: rawInsights } = parsed.data;
+      if (lane !== folder) {
+        report(where, "R-LANE", `Lane "${lane}" must be mid or bot and match the folder "${folder}".`);
+        continue;
+      }
+      const unknown = pair.filter((a) => !archetypeName(a));
+      if (unknown.length) {
+        report(where, "R-ARCH", `Not in the approved Archetype list: ${unknown.join(", ")}.`);
+        continue;
+      }
+      const sorted = [...pair].sort();
+      if (pair[0] === pair[1] || basename(file, ".yaml") !== `${sorted[0]}--${sorted[1]}`) {
+        report(where, "R-PAIR", `An Archetype Matchup needs two different Archetypes, in a file named "${sorted[0]}--${sorted[1]}.yaml".`);
+        continue;
+      }
+      const list: Insight[] = [];
+      for (const raw of rawInsights) {
+        const entryId = typeof raw.id === "string" ? raw.id : undefined;
+        const shaped = looseInsight.omit({ section: true, about: true, spike: true }).safeParse(raw);
+        if (!shaped.success) {
+          report(where, "R-SHAPE", `Malformed Insight: ${shaped.error.issues[0]?.path.join(".")} ${shaped.error.issues[0]?.message}`, entryId);
+          continue;
+        }
+        const before = issues.length;
+        checkCommon(where, shaped.data);
+        if (issues.length > before) continue;
+        seenIds.add(shaped.data.id);
+        list.push({ ...shaped.data, section: "", about: "both" } as Insight);
+      }
+      archetypeMatchups.set(`${lane}/${sorted[0]}--${sorted[1]}`, { lane, archetypes: [sorted[0], sorted[1]], insights: list });
+    }
+  }
+
+  const toChampionInsight = (i: Insight): ChampionInsightView => {
+    const { section: _s, about: _a, spike: _sp, ...rest } = i;
+    const { id, name } = sources.get(i.source)!;
+    return { ...rest, source: { id, name }, outdated: comparePatch(i.patch, catalog.currentPatch) < 0 };
+  };
+
   const verdicts = readList<VerdictRecord>(contentDir, "verdicts.yaml");
   const meNotes = readList<MeNoteRecord>(contentDir, "notes.yaml");
   const approved = new Set(readList<string>(contentDir, "review.yaml"));
@@ -366,16 +427,42 @@ export function loadKnowledgeBase(contentDir: string): { kb: KnowledgeBase; repo
       return {
         ...profile,
         insights: (championInsights.get(id) ?? [])
-          .map(({ section: _s, about: _a, spike: _sp, ...i }) => {
-            const { id: sourceId, name } = sources.get(i.source)!;
-            return { ...i, source: { id: sourceId, name }, outdated: comparePatch(i.patch, catalog.currentPatch) < 0 };
-          })
+          .map(toChampionInsight)
           .sort((a, b) => comparePatch(b.patch, a.patch)),
         matchups: [...allKeys]
           .map((key) => [key, matchupOrEmpty(key)] as const)
           .filter((entry): entry is readonly [string, Matchup] => Boolean(entry[1]) && entry[1]!.champions.includes(id))
           .map(([key, m]) => ({ key, lane: m.lane, other: champion(m.champions[0] === id ? m.champions[1] : m.champions[0]) })),
       };
+    },
+    archetypeMatchup(key) {
+      const [lane, pair] = key.split("/") as [Lane, string];
+      const ids = (pair ?? "").split("--");
+      if ((lane !== "mid" && lane !== "bot") || ids.length !== 2 || ids.some((a) => !archetypeName(a)))
+        throw new Error(`Unknown Archetype Matchup: ${key}`);
+      const members = (archetype: string) =>
+        catalog.champions
+          .filter((c) => profiles.get(c.id)?.primaryArchetype === archetype)
+          .map((c) => champion(c.id));
+      const [a, b] = ids.map(members);
+      const between = (m: Matchup) =>
+        (a.some((c) => c.id === m.champions[0]) && b.some((c) => c.id === m.champions[1])) ||
+        (a.some((c) => c.id === m.champions[1]) && b.some((c) => c.id === m.champions[0]));
+      return {
+        key,
+        lane,
+        archetypes: ids.map((id, i) => ({ id, name: archetypeName(id)!, champions: [a, b][i] })),
+        insights: (archetypeMatchups.get(key)?.insights ?? []).map(toChampionInsight).sort((x, y) => comparePatch(y.patch, x.patch)),
+        matchups: [...matchups.entries()].filter(([, m]) => m.lane === lane && between(m)).map(([k]) => k),
+      };
+    },
+    archetypeMatchups() {
+      return [...archetypeMatchups.entries()].map(([key, am]) => ({
+        key,
+        lane: am.lane,
+        names: [archetypeName(am.archetypes[0])!, archetypeName(am.archetypes[1])!] as [string, string],
+        insights: am.insights.length,
+      }));
     },
     focusChampions(lane) {
       return focus[lane].map((id) => ({ id, name: champion(id).name, lane }));

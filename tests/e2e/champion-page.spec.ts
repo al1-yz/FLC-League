@@ -38,3 +38,15 @@ test("an Opponent page shows Archetype, traits and Matchups, reached from a Matc
   await expect(page.getByRole("link", { name: /Syndra vs Orianna/ })).toBeVisible();
   await expect(page.getByRole("link", { name: /Syndra vs Akali/ })).toBeVisible();
 });
+
+test("Archetype Matchups are reachable from the top bar and show principles and champions", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "Archetypes" }).click();
+  await page.getByRole("link", { name: /Assassin vs Control Mage/ }).click();
+
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Assassin vs Control Mage");
+  await expect(page.getByText("Assassins want to fight before the control mage gets its first item.")).toBeVisible();
+  await expect(page.getByRole("region", { name: "Assassin" }).getByRole("link", { name: "Akali" })).toBeVisible();
+  await expect(page.getByRole("region", { name: "Control Mage" }).getByRole("link", { name: "Orianna" })).toBeVisible();
+  await expect(page.getByText("Not yet available")).toBeVisible();
+});

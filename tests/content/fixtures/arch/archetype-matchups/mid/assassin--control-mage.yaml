@@ -1,0 +1,5 @@
+lane: mid
+archetypes: [assassin, control-mage]
+insights:
+  - { id: arch-1, claim: Assassins want to fight before the control mage's first item., source: coach-curtis, link: "https://www.youtube.com/watch?v=arch", locator: "02:10", patch: "16.22", noted: 2026-11-11, collectedBy: user }
+  - { id: arch-bad, claim: Missing Patch., source: coach-curtis, link: "https://www.youtube.com/watch?v=arch", locator: "02:20", noted: 2026-11-11, collectedBy: user }
