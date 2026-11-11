@@ -66,7 +66,14 @@ export default async function MatchupPage({
         <dl className="reveal mt-8 grid max-w-3xl grid-cols-2 gap-x-10 gap-y-3 text-sm md:grid-cols-4" style={{ "--i": 2 } as React.CSSProperties}>
           <Spec label="You" value={you.name} />
           <Spec label="Archetype" value={youProfile.primaryArchetype ?? "—"} />
-          <Spec label="Opponent" value={opponent.name} />
+          <div>
+            <dt className="text-[0.78rem] uppercase tracking-[0.28em] text-ink-faint">Opponent</dt>
+            <dd className="mt-1">
+              <Link href={`/opponents/${opponent.id}`} className="text-ink underline decoration-blush-400/40 underline-offset-4 hover:text-blush-300">
+                {opponent.name}
+              </Link>
+            </dd>
+          </div>
           <Spec label="Archetype" value={opponentProfile.primaryArchetype ?? "—"} />
           <Spec label="Coach notes" value={String(insights.length)} />
           <Spec label="Sections covered" value={`${sections.filter((s) => s.insights.length).length} / ${sections.length}`} />

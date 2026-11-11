@@ -56,6 +56,7 @@ export const championFile = z.object({
   primaryArchetype: z.string().optional(),
   secondaryArchetype: z.string().optional(),
   species: z.string().optional(),
+  insights: z.array(z.record(z.string(), z.unknown())).default([]),
 });
 
 /** Loose shapes used while validating (D20.1): rules are checked explicitly and reported, not thrown. */
