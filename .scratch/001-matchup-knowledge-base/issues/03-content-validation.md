@@ -4,10 +4,14 @@
 
 **Blocked by:** #01
 
-**Status:** ready-for-agent
+**Status:** done (awaiting user review)
 
-- [ ] Each rule has a fixture with exactly that violation and a test asserting the report entry
-- [ ] A test fails if any rule lacks a fixture (SC-006)
-- [ ] Invalid entries are excluded while valid entries in the same file still load
-- [ ] Report page shows file, location, entry id, rule and message
-- [ ] General Concept Insights without a Patch are accepted; Matchup Insights without one are rejected
+- [x] Each rule has a fixture with exactly that violation and a test asserting the report entry
+- [x] A test fails if any rule lacks a fixture (SC-006)
+- [x] Invalid entries are excluded while valid entries in the same file still load
+- [x] Report page shows file, location, entry id, rule and message
+- [x] General Concept Insights without a Patch are accepted; Matchup Insights without one are rejected
+
+## Comments
+
+- 2026-11-11 (Claude): Implemented test-first. S1: `tests/content/validation.test.ts` loads a `broken` fixture with exactly one planted violation per rule (two for R-SRC and R-ARCH), checks every report entry, checks that nothing beyond the planted issues is reported, that valid entries in the same file still load, and that a rule-coverage table fails if a rule has no case (SC-006). S2: Playwright test for `/validation` and the top-bar issue count, using a dedicated e2e fixture with one planted R-PATCH issue. Added R-SHAPE for malformed entries (documented in the contract). Third-party References and Conflicts are now parsed and validated; displaying them is tickets 13 and 04/09. Concept and Archetype Matchup rules arrive with tickets 10 and 12. The user's private content repo validates clean.

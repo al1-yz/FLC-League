@@ -107,6 +107,7 @@ conflicts:
 | R-LANE | lane ∈ {mid, bot} | FR-041 |
 | R-ID | Insight ids unique across the repository | — |
 | R-CHAMP | every champion id exists in the catalog | edge case |
+| R-SHAPE | the entry or file has the documented fields and types (e.g. a required `claim` is missing) | FR-006 |
 
-Each failure becomes a validation report entry `{file, path, entryId, rule, message}`, and the entry is excluded.
+Each failure becomes a validation report entry `{file, entryId?, rule, message}`. Entry-level rules (R-SRC, R-PATCH, R-QUOTE, R-SECTION, R-ABOUT, R-ID, R-RANK, R-CONFLICT) drop only that entry; file-level rules (R-LANE, R-PAIR, R-CHAMP, R-FOCUS) drop the whole file; R-ARCH drops only the offending Archetype. The report is shown at `/validation`, and the top bar shows the issue count. Rules for General Concept files and Archetype Matchup files join this table when those loaders arrive (tickets 10 and 12).
 I8 and I9 are display rules, not load rules.

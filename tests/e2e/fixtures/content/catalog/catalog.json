@@ -1,0 +1,30 @@
+{
+  "currentPatch": "16.22",
+  "refreshedAt": "2026-11-09",
+  "champions": [
+    {
+      "id": "orianna",
+      "name": "Orianna"
+    },
+    {
+      "id": "syndra",
+      "name": "Syndra"
+    },
+    {
+      "id": "akali",
+      "name": "Akali"
+    },
+    {
+      "id": "zed",
+      "name": "Zed"
+    },
+    {
+      "id": "ezreal",
+      "name": "Ezreal"
+    },
+    {
+      "id": "kaisa",
+      "name": "Kai'Sa"
+    }
+  ]
+}

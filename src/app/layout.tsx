@@ -12,13 +12,13 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const { kb } = loadKnowledgeBase(contentDir());
+  const { kb, report } = loadKnowledgeBase(contentDir());
 
   return (
     <html lang="en" className={GeistSans.variable}>
       <body className="flex min-h-screen flex-col">
         <Backdrop />
-        <TopBar mid={kb.focusChampions("mid")} bot={kb.focusChampions("bot")} patch={kb.currentPatch()} />
+        <TopBar mid={kb.focusChampions("mid")} bot={kb.focusChampions("bot")} patch={kb.currentPatch()} issues={report.issues.length} />
         <main className="flex-1">{children}</main>
         <footer className="px-10 py-6 text-[0.68rem] leading-relaxed text-ink-faint">
           FLC isn&apos;t endorsed by Riot Games and doesn&apos;t reflect the views or opinions of Riot Games or

@@ -1,0 +1,11 @@
+{
+  "currentPatch": "16.22",
+  "refreshedAt": "2026-11-11",
+  "champions": [
+    { "id": "ahri", "name": "Ahri" },
+    { "id": "akali", "name": "Akali" },
+    { "id": "orianna", "name": "Orianna" },
+    { "id": "syndra", "name": "Syndra" },
+    { "id": "zed", "name": "Zed" }
+  ]
+}

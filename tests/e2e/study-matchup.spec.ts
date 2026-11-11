@@ -52,3 +52,16 @@ test("the statistics prototype is clearly marked as sample data", async ({ page 
   await expect(page.getByText("Prototype · sample data only")).toBeVisible();
   await expect(page.getByRole("img", { name: "Influence map of opponents" })).toBeVisible();
 });
+
+test("content problems are listed on the validation report and flagged in the top bar", async ({ page }) => {
+  await page.goto("/");
+
+  await page.getByRole("link", { name: /1 content issue/ }).click();
+  await expect(page).toHaveURL(/\/validation$/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Content report");
+
+  const issue = page.getByRole("listitem").filter({ hasText: "e2e-missing-patch" });
+  await expect(issue).toContainText("matchups/mid/akali--syndra.yaml");
+  await expect(issue).toContainText("R-PATCH");
+  await expect(issue).toContainText("Patch like 16.22");
+});

@@ -1,0 +1,4 @@
+lane: mid
+champions: [akali, syndra]
+insights:
+  - { id: e2e-missing-patch, section: overview, about: both, claim: Planted for the validation report test., source: coach-curtis, link: "https://www.youtube.com/watch?v=planted", locator: "00:30", noted: 2026-11-11, collectedBy: claude }

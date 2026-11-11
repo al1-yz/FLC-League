@@ -147,3 +147,7 @@ Each grilling round's outcomes. **D** = decided, **O** = open, **H** = hypothesi
 ## Statistics prototype restyle — 2026-11-11
 
 - **D19.1** The statistics prototype follows the ethereal flow: palette scene, no boxes, floating key figures with orbiting rings, an influence map with curved currents and travelling lights, flowing handshake ribbons, a smooth game-length curve with a moving point, growing level-spike bars, plus a new **damage profile** and **phase strength** (sample data). The build quest becomes a winding trail. Sections drift in on scroll. Still sample data; real figures come with feature 002.
+
+## Ticket 03 — 2026-11-11
+
+- **D20.1** Validation reports instead of throwing. Entry-level rule breaks drop only that entry, file-level ones drop the file, and every issue is listed at `/validation`, with a count in the top bar. A new **R-SHAPE** rule covers malformed entries and files. Insight ids are unique across the whole repository (the first occurrence wins).
