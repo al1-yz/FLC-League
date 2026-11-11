@@ -4,13 +4,17 @@
 
 **Blocked by:** #01
 
-**Status:** ready-for-agent
+**Status:** done (awaiting user review)
 
-- [ ] Mid Matchup shows 14 Sections in template order; Bot Matchup shows its 18
-- [ ] Perspective follows the Focus Champion opened from; switch available when both are Focus Champions
-- [ ] Insights tagged about the Opponent appear as Opponent information
-- [ ] Conflicting Insights appear side by side, labeled, neither ranked above the other
-- [ ] Older-Patch Insights show "possibly outdated" with their Patch, listed after current-Patch ones
-- [ ] Power spikes are grouped by level and by item
-- [ ] Empty Sections show a gap marker
-- [ ] End-to-end test "study a Matchup" passes
+- [x] Mid Matchup shows 14 Sections in template order; Bot Matchup shows its 18
+- [x] Perspective follows the Focus Champion opened from; switch available when both are Focus Champions
+- [x] Insights tagged about the Opponent appear as Opponent information
+- [x] Conflicting Insights appear side by side, labeled, neither ranked above the other
+- [x] Older-Patch Insights show "possibly outdated" with their Patch, listed after current-Patch ones
+- [x] Power spikes are grouped by level and by item
+- [x] Empty Sections show a gap marker
+- [x] End-to-end test "study a Matchup" passes
+
+## Comments
+
+- 2026-11-11 (Claude): Test-first through the Content module (rich fixture: sides, freshness ordering, Conflicts, spike groups, perspective switch) plus a browser test on Akali vs Zed. The Section counts reflect D15.1 (17 Mid / 18 Bot). Spike levels also light up on the lane line. A spike on a non-Power-spikes Section is reported as R-SECTION.

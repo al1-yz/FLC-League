@@ -1,0 +1,14 @@
+lane: mid
+champions: [akali, zed]
+insights:
+  - { id: old-zed, section: trading-patterns, about: zed, claim: Older claim about Zed., source: coach-a, link: "https://example.com/1", patch: "16.20", noted: 2026-10-01, collectedBy: user }
+  - { id: new-akali, section: trading-patterns, about: akali, claim: Current claim about Akali., source: coach-a, link: "https://example.com/2", patch: "16.22", noted: 2026-11-10, collectedBy: user }
+  - { id: both-lane, section: overview, about: both, claim: Shared claim., source: coach-a, link: "https://example.com/3", patch: "16.22", noted: 2026-11-10, collectedBy: user }
+  - { id: lvl3-a, section: all-in-windows, about: zed, claim: Zed wins the level 3 all-in., source: coach-a, link: "https://example.com/4", patch: "16.22", noted: 2026-11-10, collectedBy: user }
+  - { id: lvl3-b, section: all-in-windows, about: akali, claim: Akali wins the level 3 all-in., source: coach-b, link: "https://example.com/5", patch: "16.22", noted: 2026-11-10, collectedBy: user }
+  - { id: spike-6-zed, section: power-spikes, about: zed, spike: { level: 6 }, claim: Zed spikes at 6., source: coach-a, link: "https://example.com/6", patch: "16.22", noted: 2026-11-10, collectedBy: user }
+  - { id: spike-2-akali, section: power-spikes, about: akali, spike: { level: 2 }, claim: Akali spikes at 2., source: coach-a, link: "https://example.com/7", patch: "16.22", noted: 2026-11-10, collectedBy: user }
+  - { id: spike-zhonya, section: power-spikes, about: akali, spike: { item: "3157" }, claim: Zhonya's changes the all-in., source: coach-b, link: "https://example.com/8", patch: "16.22", noted: 2026-11-10, collectedBy: user }
+  - { id: spike-general, section: power-spikes, about: both, claim: Both spike hard at 6., source: coach-b, link: "https://example.com/9", patch: "16.22", noted: 2026-11-10, collectedBy: user }
+conflicts:
+  - { id: c-lvl3, insights: [lvl3-a, lvl3-b] }

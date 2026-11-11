@@ -54,6 +54,13 @@ export default async function MatchupPage({
         <h1 className="reveal mt-4 text-6xl font-light uppercase tracking-[0.22em] text-ink md:text-7xl" style={{ "--i": 1 } as React.CSSProperties}>
           {you.name} <span className="text-blush-400">vs</span> {opponent.name}
         </h1>
+        {view.switchTo && (
+          <p className="reveal mt-4" style={{ "--i": 2 } as React.CSSProperties}>
+            <Link href={`/${view.key.replace("/", "/matchup/")}?as=${view.switchTo}`} className="glass-pill">
+              See it as {opponent.name} ⇄
+            </Link>
+          </p>
+        )}
         <dl className="reveal mt-8 grid max-w-3xl grid-cols-2 gap-x-10 gap-y-3 text-sm md:grid-cols-4" style={{ "--i": 2 } as React.CSSProperties}>
           <Spec label="You" value={you.name} />
           <Spec label="Archetype" value={youProfile.primaryArchetype ?? "—"} />
@@ -91,7 +98,11 @@ export default async function MatchupPage({
 
           <div className="mt-14">
             <h2 className="sheet__title">Lane section · levels 1–18</h2>
-            <LaneSection />
+            <LaneSection
+              spikes={(sections.find((s) => s.id === "power-spikes")?.insights ?? []).flatMap((i) =>
+                i.spike && "level" in i.spike ? [{ level: i.spike.level, side: i.side }] : [],
+              )}
+            />
           </div>
         </div>
       </section>
@@ -106,7 +117,7 @@ export default async function MatchupPage({
           {notes.flatMap((g) => g.sections).map((section, i) => (
             <li key={section.id} className={`md:w-[46%] ${i % 2 ? "md:ml-auto" : ""}`}>
               <Reveal delay={60}>
-                <Annotation index={i + 1} section={section} />
+                <Annotation index={i + 1} section={section} opponent={opponent.name} />
               </Reveal>
             </li>
           ))}
@@ -140,7 +151,10 @@ function Spec({ label, value }: { label: string; value: string }) {
   );
 }
 
-function Annotation({ index, section }: { index: number; section: SectionView }) {
+function Annotation({ index, section, opponent }: { index: number; section: SectionView; opponent: string }) {
+  const inConflict = new Set(section.conflicts.flat());
+  const byId = new Map(section.insights.map((i) => [i.id, i]));
+  const plain = section.insights.filter((i) => !inConflict.has(i.id));
   return (
     <section id={section.id} className="scroll-mt-24">
       <h3 className="flex items-baseline gap-4 pb-2">
@@ -148,23 +162,56 @@ function Annotation({ index, section }: { index: number; section: SectionView })
         <span className="text-sm font-normal tabular-nums text-blush-400">{String(index).padStart(2, "0")}</span>
         <span className="text-[0.9rem] uppercase tracking-[0.3em] text-ink">{section.title}</span>
       </h3>
-      {section.insights.length ? (
-        <ul className="mt-4 space-y-5">
-          {section.insights.map((insight) => (
-            <Note key={insight.id} insight={insight} />
+      {section.insights.length === 0 && <p className="mt-4 text-sm italic text-ink-faint">Awaiting coach notes.</p>}
+
+      {section.spikeGroups ? (
+        <div className="mt-4 space-y-6">
+          {section.spikeGroups.map((group) => (
+            <div key={group.label}>
+              <p className="pl-9 text-[0.82rem] uppercase tracking-[0.25em] text-lavender-300">{group.label}</p>
+              <ul className="mt-2 space-y-5">
+                {group.insights.map((insight) => (
+                  <Note key={insight.id} insight={insight} opponent={opponent} />
+                ))}
+              </ul>
+            </div>
           ))}
-        </ul>
+        </div>
       ) : (
-        <p className="mt-4 text-sm italic text-ink-faint">Awaiting coach notes.</p>
+        plain.length > 0 && (
+          <ul className="mt-4 space-y-5">
+            {plain.map((insight) => (
+              <Note key={insight.id} insight={insight} opponent={opponent} />
+            ))}
+          </ul>
+        )
       )}
+
+      {section.conflicts.map(([x, y]) => (
+        <div key={`${x}-${y}`} className="mt-6 pl-9" role="group" aria-label="Conflicting coach notes">
+          <p className="mb-3 flex items-center gap-2 text-[0.82rem] uppercase tracking-[0.25em] text-blush-300">
+            <span aria-hidden="true">⇄</span> Coaches disagree
+          </p>
+          <ul className="grid gap-6 border-l border-blush-400/40 pl-5 md:grid-cols-2">
+            {[x, y].map((id) => byId.get(id)).filter((i): i is InsightView => Boolean(i)).map((insight) => (
+              <Note key={insight.id} insight={insight} opponent={opponent} indent={false} />
+            ))}
+          </ul>
+        </div>
+      ))}
     </section>
   );
 }
 
-function Note({ insight }: { insight: InsightView }) {
+function Note({ insight, opponent, indent = true }: { insight: InsightView; opponent: string; indent?: boolean }) {
+  const side = insight.side === "you" ? "You" : insight.side === "opponent" ? opponent : "Both";
   return (
     <li>
-      <article className="pl-9 transition-transform duration-700 hover:translate-x-1">
+      <article className={`${indent ? "pl-9" : ""} transition-transform duration-700 hover:translate-x-1 ${insight.outdated ? "opacity-70" : ""}`}>
+        <p className="mb-1.5 flex flex-wrap items-center gap-2 text-[0.8rem]">
+          <span className={`chip ${insight.side === "you" ? "!text-blush-300 !border-blush-400/40" : ""}`}>{side}</span>
+          {insight.outdated && <span className="chip !text-ink-faint">Possibly outdated · {insight.patch}</span>}
+        </p>
         <p className="leading-relaxed text-ink-muted">{insight.claim}</p>
         {insight.quote && <p className="mt-2 text-sm italic text-lavender-200">“{insight.quote}”</p>}
         <p className="mt-2 text-[0.82rem] uppercase tracking-[0.18em] text-ink-faint">
