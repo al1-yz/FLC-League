@@ -1,0 +1,4 @@
+primaryArchetype: assassin
+insights:
+  - { id: zed-curve, claim: Zed's power curve peaks around his first item., source: coach-a, link: "https://example.com/zed", patch: "16.22", noted: 2026-11-10, collectedBy: user }
+  - { id: zed-no-patch, claim: Missing its Patch., source: coach-a, link: "https://example.com/zed2", noted: 2026-11-10, collectedBy: user }

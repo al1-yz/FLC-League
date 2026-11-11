@@ -27,3 +27,14 @@ test("searching an opponent opens an empty Matchup ready for a Verdict", async (
   await expect(page.getByRole("button", { name: "Record verdict" })).toBeVisible();
   await expect(page.getByText("Awaiting coach notes.").first()).toBeVisible();
 });
+
+test("an Opponent page shows Archetype, traits and Matchups, reached from a Matchup", async ({ page }) => {
+  await page.goto("/mid/matchup/orianna--syndra?as=orianna");
+  await page.getByRole("link", { name: "Syndra", exact: true }).click();
+
+  await expect(page).toHaveURL(/\/opponents\/syndra$/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Syndra");
+  await expect(page.getByText("Archetype not classified")).toBeVisible();
+  await expect(page.getByRole("link", { name: /Syndra vs Orianna/ })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Syndra vs Akali/ })).toBeVisible();
+});

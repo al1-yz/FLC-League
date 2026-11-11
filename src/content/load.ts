@@ -71,6 +71,11 @@ export type ChampionProfile = ChampionView & {
   species?: string;
 };
 
+/** A champion-level Insight (no Section or side), e.g. a general power curve (FR-032). */
+export type ChampionInsightView = Omit<InsightView, "section" | "about" | "side" | "spike">;
+
+export type OpponentView = ChampionProfile & { insights: ChampionInsightView[]; matchups: { key: MatchupKey; lane: Lane; other: ChampionView }[] };
+
 export type MatchupSummary = {
   key: MatchupKey;
   lane: Lane;
@@ -91,6 +96,7 @@ export type KnowledgeBase = {
   matchupsFor(focus: ChampionId, lane: Lane): MatchupSummary[];
   focusChampions(lane: Lane): FocusChampion[];
   matchup(key: MatchupKey, perspective: ChampionId): MatchupView;
+  opponent(id: ChampionId): OpponentView;
 };
 
 /** One rejected entry or file: where it is, which load rule it breaks, and why (FR-009). */
@@ -144,6 +150,7 @@ export function loadKnowledgeBase(contentDir: string): { kb: KnowledgeBase; repo
 
   // Champion profiles (R-ARCH): unknown Archetypes and a secondary equal to the primary are dropped.
   const profiles = new Map<ChampionId, z.infer<typeof championFile>>();
+  const championInsights = new Map<ChampionId, Insight[]>();
   for (const file of yamlFiles(join(contentDir, "champions"))) {
     const where = `champions/${file}`;
     const parsed = championFile.safeParse(readYaml(join(contentDir, "champions", file)));
@@ -174,6 +181,37 @@ export function loadKnowledgeBase(contentDir: string): { kb: KnowledgeBase; repo
   }
 
   const seenIds = new Set<string>();
+
+  /** Checks shared by every external Insight: id, Source and link, Patch, quote (I1–I3). */
+  const checkCommon = (where: string, i: z.infer<typeof looseInsight> | Omit<z.infer<typeof looseInsight>, "section" | "about">) => {
+    if (seenIds.has(i.id)) report(where, "R-ID", `Insight id "${i.id}" is already used.`, i.id);
+    const source = sources.get(i.source);
+    if (!source) report(where, "R-SRC", `Source "${i.source}" does not exist.`, i.id);
+    else if (!i.link) report(where, "R-SRC", "External Insights need a link.", i.id);
+    else if (source.medium === "video" && !i.locator) report(where, "R-SRC", "Video Sources need a timestamp (locator).", i.id);
+    if (!i.patch || !PATCH_FORMAT.test(i.patch)) report(where, "R-PATCH", "Matchup and champion Insights need a Patch like 16.22.", i.id);
+    if (i.quote && (i.quote.length > QUOTE_LIMIT || sentenceCount(i.quote) > 1))
+      report(where, "R-QUOTE", `Quotes are limited to one sentence of at most ${QUOTE_LIMIT} characters.`, i.id);
+  };
+
+  for (const [id, profile] of profiles) {
+    const where = `champions/${id}.yaml`;
+    const list: Insight[] = [];
+    for (const raw of profile.insights) {
+      const entryId = typeof raw.id === "string" ? raw.id : undefined;
+      const shaped = looseInsight.omit({ section: true, about: true, spike: true }).safeParse(raw);
+      if (!shaped.success) {
+        report(where, "R-SHAPE", `Malformed Insight: ${shaped.error.issues[0]?.path.join(".")} ${shaped.error.issues[0]?.message}`, entryId);
+        continue;
+      }
+      const before = issues.length;
+      checkCommon(where, shaped.data);
+      if (issues.length > before) continue;
+      seenIds.add(shaped.data.id);
+      list.push({ ...shaped.data, section: "", about: id } as Insight);
+    }
+    championInsights.set(id, list);
+  }
   const matchups = new Map<MatchupKey, Matchup>();
 
   for (const folder of ["mid", "bot"] as const) {
@@ -223,14 +261,7 @@ export function loadKnowledgeBase(contentDir: string): { kb: KnowledgeBase; repo
         }
         const i = shaped.data;
         const before = issues.length;
-        if (seenIds.has(i.id)) report(where, "R-ID", `Insight id "${i.id}" is already used.`, i.id);
-        const source = sources.get(i.source);
-        if (!source) report(where, "R-SRC", `Source "${i.source}" does not exist.`, i.id);
-        else if (!i.link) report(where, "R-SRC", "External Insights need a link.", i.id);
-        else if (source.medium === "video" && !i.locator) report(where, "R-SRC", "Video Sources need a timestamp (locator).", i.id);
-        if (!i.patch || !PATCH_FORMAT.test(i.patch)) report(where, "R-PATCH", "Matchup Insights need a Patch like 16.22.", i.id);
-        if (i.quote && (i.quote.length > QUOTE_LIMIT || sentenceCount(i.quote) > 1))
-          report(where, "R-QUOTE", `Quotes are limited to one sentence of at most ${QUOTE_LIMIT} characters.`, i.id);
+        checkCommon(where, i);
         if (!allowedSections.has(i.section)) report(where, "R-SECTION", `Section "${i.section}" does not exist in the ${lane} template.`, i.id);
         else if (i.spike && i.section !== "power-spikes") report(where, "R-SECTION", "Only Power spikes Insights can name a level or item spike.", i.id);
         if (i.about !== "both" && !champions.includes(i.about))
@@ -328,6 +359,23 @@ export function loadKnowledgeBase(contentDir: string): { kb: KnowledgeBase; repo
           };
         })
         .sort((x, y) => x.opponent.name.localeCompare(y.opponent.name));
+    },
+    opponent(id) {
+      const { insights: _, ...profile } = { ...kb.profile(id), insights: undefined };
+      const allKeys = new Set([...matchups.keys(), ...verdicts.map((v) => v.matchup)]);
+      return {
+        ...profile,
+        insights: (championInsights.get(id) ?? [])
+          .map(({ section: _s, about: _a, spike: _sp, ...i }) => {
+            const { id: sourceId, name } = sources.get(i.source)!;
+            return { ...i, source: { id: sourceId, name }, outdated: comparePatch(i.patch, catalog.currentPatch) < 0 };
+          })
+          .sort((a, b) => comparePatch(b.patch, a.patch)),
+        matchups: [...allKeys]
+          .map((key) => [key, matchupOrEmpty(key)] as const)
+          .filter((entry): entry is readonly [string, Matchup] => Boolean(entry[1]) && entry[1]!.champions.includes(id))
+          .map(([key, m]) => ({ key, lane: m.lane, other: champion(m.champions[0] === id ? m.champions[1] : m.champions[0]) })),
+      };
     },
     focusChampions(lane) {
       return focus[lane].map((id) => ({ id, name: champion(id).name, lane }));
