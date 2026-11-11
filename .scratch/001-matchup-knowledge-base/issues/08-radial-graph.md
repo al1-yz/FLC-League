@@ -4,9 +4,13 @@
 
 **Blocked by:** #07
 
-**Status:** ready-for-agent
+**Status:** done (awaiting user review)
 
-- [ ] Table is the default view; toggle switches to graph and back
-- [ ] Nodes colored by the selected signal only; never a blend
-- [ ] Nodes without the selected signal are neutral
-- [ ] Clicking a node opens that Matchup from the Focus Champion's perspective
+- [x] Table is the default view; toggle switches to graph and back
+- [x] Nodes colored by the selected signal only; never a blend
+- [x] Nodes without the selected signal are neutral
+- [x] Clicking a node opens that Matchup from the Focus Champion's perspective
+
+## Comments
+
+- 2026-11-11 (Claude): Table/Graph toggle on the champion page (table default). Opponents sit around the Focus Champion on curved strands, coloured by one signal at a time: Verdict (lavender = easy, blush = hard) or Statistical (neutral "n/a" until feature 002); missing signals are neutral. Each node links to its Matchup. Browser-tested.
