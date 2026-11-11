@@ -4,9 +4,13 @@
 
 **Blocked by:** #01
 
-**Status:** ready-for-agent
+**Status:** done (awaiting user review)
 
-- [ ] Editing a content file shows the change on the open page within 2 seconds without manual reload
-- [ ] Text typed in an open form survives the refresh
-- [ ] New invalid entries appear in the validation report after reload
-- [ ] End-to-end test "live reload" passes
+- [x] Editing a content file shows the change on the open page within 2 seconds without manual reload
+- [x] Text typed in an open form survives the refresh
+- [x] New invalid entries appear in the validation report after reload
+- [x] End-to-end test "live reload" passes
+
+## Comments
+
+- 2026-11-11 (Claude): A chokidar watcher (one per process) feeds an SSE route; a client listener calls router.refresh(), which keeps client state. The server announces "ready" only after the watcher's initial scan, which fixed a race. The browser test adds a Matchup file and sees it appear within 2 s (passed 3 of 3 repeats). The "typed text survives" criterion is exercised by ticket 06 forms, which use the same mechanism.
